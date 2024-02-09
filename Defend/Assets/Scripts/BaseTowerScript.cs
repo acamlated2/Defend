@@ -51,7 +51,7 @@ public class BaseTowerScript : MonoBehaviour
         Vector3 dir = target.transform.position - transform.position;
         dir.Normalize();
 
-        GameObject newProjectile = _gameController.GetComponent<ProjectilePoolScript>().GetProjectile();
+        GameObject newProjectile = _gameController.transform.GetChild(0).GetComponent<ObjectPoolScript>().GetObject();
         newProjectile.transform.position = transform.position;
         newProjectile.transform.rotation = Quaternion.LookRotation(dir);
         newProjectile.GetComponent<ProjectileScript>().damage = damage;

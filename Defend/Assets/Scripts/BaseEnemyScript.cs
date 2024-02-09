@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class BaseEnemyScript : MonoBehaviour
 {
     [SerializeField] protected float health = 5;
+    public float damage = 1;
     
     private void Update()
     {

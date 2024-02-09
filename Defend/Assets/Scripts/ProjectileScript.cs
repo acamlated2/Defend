@@ -28,7 +28,7 @@ public class ProjectileScript : MonoBehaviour
         lifetime -= 1 * Time.deltaTime;
         if (lifetime <= 0)
         {
-            _gameController.GetComponent<ProjectilePoolScript>().returnProjectile(gameObject);
+            _gameController.transform.GetChild(0).GetComponent<ObjectPoolScript>().ReturnObject(gameObject);
         }
     }
 
@@ -36,7 +36,7 @@ public class ProjectileScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            _gameController.GetComponent<ProjectilePoolScript>().returnProjectile(gameObject);
+            _gameController.transform.GetChild(0).GetComponent<ObjectPoolScript>().ReturnObject(gameObject);
             
             if (other.transform.GetComponent<BaseEnemyScript>().Damage(damage))
             {
