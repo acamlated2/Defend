@@ -31,6 +31,7 @@ public class ObjectPoolScript : MonoBehaviour
         }
 
         GameObject newObject = InstantiateNewObject();
+        newObject.SetActive(true);
         poolSize = _pool.Count;
         return newObject;
     }
@@ -42,7 +43,7 @@ public class ObjectPoolScript : MonoBehaviour
 
     private GameObject InstantiateNewObject()
     {
-        GameObject newObject = Instantiate(objectPrefab);
+        GameObject newObject = Instantiate(objectPrefab, transform);
         newObject.SetActive(false);
         _pool.Add(newObject);
         newObject.transform.parent = transform;

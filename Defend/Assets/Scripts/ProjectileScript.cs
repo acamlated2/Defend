@@ -10,6 +10,7 @@ public class ProjectileScript : MonoBehaviour
     [SerializeField] private float speed = 100;
 
     [SerializeField] private float lifetime = 15;
+    private float _lifetimeMax;
 
     private GameObject _gameController;
 
@@ -18,6 +19,12 @@ public class ProjectileScript : MonoBehaviour
     private void Awake()
     {
         _gameController = GameObject.FindGameObjectWithTag("GameController");
+        _lifetimeMax = lifetime;
+    }
+
+    private void OnEnable()
+    {
+        lifetime = _lifetimeMax;
     }
 
     private void Update()
@@ -36,12 +43,9 @@ public class ProjectileScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            _gameController.transform.GetChild(0).GetComponent<ObjectPoolScript>().ReturnObject(gameObject);
+            other.GetComponent<BaseEnemyScript>().Damage(damage);
             
-            if (other.transform.GetComponent<BaseEnemyScript>().Damage(damage))
-            {
-                owner.GetComponent<BaseTowerScript>().RemoveEnemyFromList(gameObject);
-            }
+            _gameController.transform.GetChild(0).GetComponent<ObjectPoolScript>().ReturnObject(gameObject);
         }
     }
 }

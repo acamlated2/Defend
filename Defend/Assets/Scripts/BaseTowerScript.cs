@@ -19,16 +19,23 @@ public class BaseTowerScript : MonoBehaviour
 
     private GameObject _gameController;
 
+    private void OnDisable()
+    {
+        target = null;
+    }
+
     private void Awake()
     {
-        GetComponent<SphereCollider>().radius = range;
+        GetComponentInChildren<SphereCollider>().radius = range;
         _attackTimer = attackDelay;
         _gameController = GameObject.FindGameObjectWithTag("GameController");
+        
+        _gameController.GetComponent<TowerManagerScript>().AddToSet(gameObject);
     }
 
     private void Update()
     {
-        if (target == null &&
+        if (target == null ||
             enemiesInRange.Count > 0)
         {
             target = GetMostAdvancedEnemy();
@@ -36,6 +43,8 @@ public class BaseTowerScript : MonoBehaviour
         
         if (target != null)
         {
+            Debug.DrawLine(transform.position, target.transform.position, Color.yellow);
+            
             _attackTimer -= 1 * Time.deltaTime;
             if (_attackTimer <= 0)
             {
@@ -67,11 +76,6 @@ public class BaseTowerScript : MonoBehaviour
 
             foreach (var enemy in enemiesInRange)
             {
-                if (enemy == null)
-                {
-                    continue;
-                }
-                
                 NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
 
                 float distance = agent.remainingDistance;
@@ -86,30 +90,19 @@ public class BaseTowerScript : MonoBehaviour
             return closestEnemy;
         }
 
+        target = null;
         return null;
     }
 
-    public void RemoveEnemyFromList(GameObject enemyToRemove)
+    public void RemoveEnemyFromSet(GameObject enemyToRemove)
     {
         if (enemiesInRange.Contains(enemyToRemove))
         {
             enemiesInRange.Remove(enemyToRemove);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            enemiesInRange.Add(other.gameObject);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            RemoveEnemyFromList(other.gameObject);
+            if (enemyToRemove == target)
+            {
+                GetMostAdvancedEnemy();
+            }
         }
     }
 }

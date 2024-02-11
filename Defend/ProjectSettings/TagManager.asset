@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - EnemySpawningPoint
+  - Tower
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -12,7 +15,7 @@ TagManager:
   - Walkable
   - Water
   - UI
-  - 
+  - Ground
   - 
   - 
   - 

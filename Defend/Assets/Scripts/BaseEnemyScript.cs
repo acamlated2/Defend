@@ -7,8 +7,25 @@ using UnityEngine.AI;
 public class BaseEnemyScript : MonoBehaviour
 {
     [SerializeField] protected float health = 5;
+    private protected float maxHealth;
     public float damage = 1;
-    
+
+    private GameObject _gameController;
+
+    private void OnEnable()
+    {
+        GetComponent<NavMeshAgent>().SetDestination(new Vector3(0, 0, 0));
+        
+        health = maxHealth;
+    }
+
+    private void Awake()
+    {
+        maxHealth = health;
+
+        _gameController = GameObject.FindGameObjectWithTag("GameController");
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown("1"))
@@ -17,16 +34,15 @@ public class BaseEnemyScript : MonoBehaviour
         }
     }
 
-    public bool Damage(float damage)
+    public void Damage(float damage)
     {
         health -= damage;
 
         if (health <= 0)
         {
-            Destroy(gameObject);
-            return true;
+            _gameController.transform.GetChild(1).GetComponent<ObjectPoolScript>().ReturnObject(gameObject);
+            
+            _gameController.GetComponent<TowerManagerScript>().RemoveEnemyFromTower(gameObject);
         }
-
-        return false;
     }
 }
