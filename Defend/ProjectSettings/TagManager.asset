@@ -8,6 +8,8 @@ TagManager:
   - EnemySpawningPoint
   - Tower
   - Projectile
+  - IndicatorCube
+  - GroundBlock
   layers:
   - Default
   - TransparentFX
