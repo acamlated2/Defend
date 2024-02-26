@@ -7,6 +7,8 @@ using UnityEngine.Serialization;
 
 public class BaseTowerScript : MonoBehaviour
 {
+    public TowerManagerScript.TowerType type = TowerManagerScript.TowerType.Archer;
+    
     [SerializeField] protected float damage = 2;
     [SerializeField] protected float range = 7;
     [SerializeField] protected float attackDelay = 1;
@@ -24,7 +26,7 @@ public class BaseTowerScript : MonoBehaviour
         target = null;
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         GetComponentInChildren<SphereCollider>().radius = range;
         _attackTimer = attackDelay;

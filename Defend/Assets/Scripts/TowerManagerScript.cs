@@ -5,7 +5,14 @@ using UnityEngine;
 
 public class TowerManagerScript : MonoBehaviour
 {
-    [SerializeField] private GameObject towerPrefab;
+    public enum TowerType
+    {
+        Archer, 
+        Siege, 
+        Magic
+    }
+    
+    [SerializeField] private GameObject[] towerPrefabs;
     
     public HashSet<GameObject> Towers = new HashSet<GameObject>();
 
@@ -32,7 +39,17 @@ public class TowerManagerScript : MonoBehaviour
 
     public void CreateNewTower(Vector3 position)
     {
-        GameObject newTower = Instantiate(towerPrefab, position, Quaternion.identity);
-        AddToSet(newTower);
+        TowerType type = GetComponent<TowerSelectorScript>().GetSelectedType();
+
+        for (int i = 0; i < towerPrefabs.Length; i++)
+        {
+            if (towerPrefabs[i].GetComponent<BaseTowerScript>().type == type)
+            {
+                GameObject newTower = Instantiate(towerPrefabs[i], position, Quaternion.identity);
+                AddToSet(newTower);
+                
+                break;
+            }
+        }
     }
 }

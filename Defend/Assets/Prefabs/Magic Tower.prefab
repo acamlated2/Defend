@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1910486105958553680
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216233103219160681, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4158874471047003192, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_Name
+      value: Magic Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 5093543488925063635, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0fc0d3b475a2f2f488b3c89ef4525530, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4158874471047003192, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1746019174195805915}
+  m_SourcePrefab: {fileID: 100100000, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+--- !u!1 &2536690656366617704 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4158874471047003192, guid: 30d9937a7bf4fde49955fdd7d12e0e1d, type: 3}
+  m_PrefabInstance: {fileID: 1910486105958553680}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1746019174195805915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2536690656366617704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef81ad74e1fa35140a168aba5ae1e0d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 2
+  damage: 2
+  range: 7
+  attackDelay: 1
+  target: {fileID: 0}
