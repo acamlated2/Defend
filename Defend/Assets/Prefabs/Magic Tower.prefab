@@ -83,6 +83,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   damage: 2
-  range: 7
+  range: 14
   attackDelay: 1
   target: {fileID: 0}

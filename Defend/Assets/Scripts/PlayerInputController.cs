@@ -25,9 +25,19 @@ public class PlayerInputController : MonoBehaviour
 
         if (Physics.Raycast(_ray, out _hit))
         {
-            if (_hit.transform.tag != "GroundBlock")
+            if (_hit.transform.tag != "Block")
             {
                 HideIndicatorCube();
+                return;
+            }
+
+            if (_hit.transform.GetComponent<BlockScript>().type != BlockScript.BlockType.Ground)
+            {
+                return;
+            }
+
+            if (_hit.transform.GetComponent<GroundBlockScript>().hasTower)
+            {
                 return;
             }
 
@@ -40,6 +50,7 @@ public class PlayerInputController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 GetComponent<TowerManagerScript>().CreateNewTower(newBlockPosition);
+                _hit.transform.GetComponent<GroundBlockScript>().hasTower = true;
             }
         }
         else

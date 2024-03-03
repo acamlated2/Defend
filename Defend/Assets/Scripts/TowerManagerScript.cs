@@ -12,7 +12,7 @@ public class TowerManagerScript : MonoBehaviour
         Magic
     }
     
-    [SerializeField] private GameObject[] towerPrefabs;
+    public GameObject[] towerPrefabs;
     
     public HashSet<GameObject> Towers = new HashSet<GameObject>();
 
@@ -47,6 +47,8 @@ public class TowerManagerScript : MonoBehaviour
             {
                 GameObject newTower = Instantiate(towerPrefabs[i], position, Quaternion.identity);
                 AddToSet(newTower);
+                
+                GetComponent<AIHelperScript>().AssignCoverageValues(newTower);
                 
                 break;
             }
