@@ -80,3 +80,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   hasTower: 0
+  height: 0
+  stoolBlockPrefab: {fileID: 7974488915539661986, guid: 31cb140d1520bfc4d994b6bb4788ab73, type: 3}
