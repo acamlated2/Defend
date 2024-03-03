@@ -43,8 +43,6 @@ public class AIHelperScript : MonoBehaviour
 
     private void GetSuggestedTowerPlacement(GameObject tower)
     {
-        float towerRange = tower.GetComponent<BaseTowerScript>().range;
-        
         float highestCoverageSum = float.NegativeInfinity;
         GameObject blockWithHighestSum = new GameObject();
         
@@ -54,6 +52,9 @@ public class AIHelperScript : MonoBehaviour
             {
                 continue;
             }
+
+            float towerRange = tower.GetComponent<BaseTowerScript>()
+                .CalculateRange(groundBlocks[i].GetComponent<GroundBlockScript>().height);
             
             Vector3 towerLocation = groundBlocks[i].transform.position + new Vector3(0, 2, 0);
 
@@ -80,7 +81,6 @@ public class AIHelperScript : MonoBehaviour
             }
         }
         
-        Debug.Log(highestCoverageSum);
         blockWithHighestSum.GetComponent<Renderer>().material.color = Color.blue;
     }
 

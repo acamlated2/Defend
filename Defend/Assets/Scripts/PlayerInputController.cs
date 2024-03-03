@@ -49,7 +49,8 @@ public class PlayerInputController : MonoBehaviour
             
             if (Input.GetMouseButtonDown(0))
             {
-                GetComponent<TowerManagerScript>().CreateNewTower(newBlockPosition);
+                GetComponent<TowerManagerScript>().CreateNewTower(newBlockPosition,
+                    _hit.transform.GetComponent<GroundBlockScript>().height);
                 _hit.transform.GetComponent<GroundBlockScript>().hasTower = true;
             }
         }

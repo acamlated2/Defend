@@ -10,7 +10,8 @@ public class BaseTowerScript : MonoBehaviour
     public TowerManagerScript.TowerType type = TowerManagerScript.TowerType.Archer;
     
     [SerializeField] protected float damage = 2;
-    public float range = 7;
+    public float range = 10;
+    [SerializeField] protected float defaultRange = 10;
     [SerializeField] protected float attackDelay = 1;
     private float _attackTimer;
 
@@ -28,6 +29,8 @@ public class BaseTowerScript : MonoBehaviour
 
     protected virtual void Awake()
     {
+        range = defaultRange;
+        
         GetComponentInChildren<SphereCollider>().radius = range / 2;
         _attackTimer = attackDelay;
         _gameController = GameObject.FindGameObjectWithTag("GameController");
@@ -106,5 +109,31 @@ public class BaseTowerScript : MonoBehaviour
                 GetMostAdvancedEnemy();
             }
         }
+    }
+
+    public void ChangeRange(int height)
+    {
+        range = CalculateRange(height);
+        GetComponentInChildren<SphereCollider>().radius = range / 2;
+    }
+
+    public float CalculateRange(int height)
+    {
+        switch (height)
+        {
+            case 0:
+                return 10;
+                    
+            case 1:
+                return 12;
+                    
+            case 2:
+                return 14;
+                    
+            case 3:
+                return 15;
+        }
+
+        return 0;
     }
 }

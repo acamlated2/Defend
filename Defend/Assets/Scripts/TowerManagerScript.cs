@@ -37,7 +37,7 @@ public class TowerManagerScript : MonoBehaviour
         }
     }
 
-    public void CreateNewTower(Vector3 position)
+    public void CreateNewTower(Vector3 position, int height)
     {
         TowerType type = GetComponent<TowerSelectorScript>().GetSelectedType();
 
@@ -47,6 +47,8 @@ public class TowerManagerScript : MonoBehaviour
             {
                 GameObject newTower = Instantiate(towerPrefabs[i], position, Quaternion.identity);
                 AddToSet(newTower);
+                
+                newTower.GetComponent<BaseTowerScript>().ChangeRange(height);
                 
                 GetComponent<AIHelperScript>().AssignCoverageValues(newTower);
                 
