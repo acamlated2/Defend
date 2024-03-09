@@ -12,6 +12,8 @@ TagManager:
   - GroundBlock
   - Block
   - EnemyPool
+  - Status Bar
+  - Status Bar Pool
   layers:
   - Default
   - TransparentFX

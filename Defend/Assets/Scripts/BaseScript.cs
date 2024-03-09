@@ -20,7 +20,7 @@ public class BaseScript : MonoBehaviour
         {
             Damage(other.GetComponent<BaseEnemyScript>().damage);
             
-            _gameController.transform.GetChild(0).transform.GetComponent<ObjectPoolScript>().ReturnObject(other.gameObject);
+            _gameController.GetComponent<EnemySpawningScript>().ReturnEnemy(other.gameObject);
             _gameController.GetComponent<TowerManagerScript>().RemoveEnemyFromTower(other.gameObject);
         }
     }

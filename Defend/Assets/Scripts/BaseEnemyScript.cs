@@ -14,41 +14,60 @@ public class BaseEnemyScript : MonoBehaviour
     }
 
     public Type type = Type.Normal;
-    [SerializeField] protected float health = 5;
-    private protected float maxHealth;
+    
+    [SerializeField] public float health = 5;
+    private protected float MaxHealth;
+    [SerializeField] public float shield = 5;
+    private protected float MaxShield;
+    [SerializeField] public float armor = 5;
+    private protected float MaxArmor;
+    
     public float damage = 1;
 
     private GameObject _gameController;
+
+    public GameObject statusBar;
 
     private void OnEnable()
     {
         GetComponent<NavMeshAgent>().SetDestination(new Vector3(0, 0, 0));
         
-        health = maxHealth;
+        health = MaxHealth;
+        shield = MaxShield;
+        armor = MaxArmor;
     }
 
     protected virtual void Awake()
     {
-        maxHealth = health;
-
         _gameController = GameObject.FindGameObjectWithTag("GameController");
     }
 
-    private void Update()
+    public void Damage(float normalDamage, float siegeDamage, float magicDamage)
     {
-        if (Input.GetKeyDown("1"))
+        armor -= magicDamage;
+        statusBar.GetComponent<StatusBarScript>().ChangeArmor(armor);
+        if (armor > 0)
         {
-            GetComponent<NavMeshAgent>().SetDestination(new Vector3(0, 0, 0));
+            return;
         }
-    }
-
-    public void Damage(float damage)
-    {
-        health -= damage;
+        
+        shield -= siegeDamage;
+        statusBar.GetComponent<StatusBarScript>().ChangeShield(shield);
+        if (shield > 0)
+        {
+            return;
+        }
+        
+        health -= normalDamage;
+        statusBar.GetComponent<StatusBarScript>().ChangeHealth(health);
+        if (health > 0)
+        {
+            return;
+        }
 
         if (health <= 0)
         {
-            _gameController.transform.GetChild(1).GetComponent<ObjectPoolScript>().ReturnObject(gameObject);
+            _gameController.GetComponent<EnemySpawningScript>().ReturnEnemy(gameObject);
             
             _gameController.GetComponent<TowerManagerScript>().RemoveEnemyFromTower(gameObject);
         }

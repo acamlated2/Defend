@@ -11,6 +11,7 @@ public class EnemySpawningScript : MonoBehaviour
 
     private GameObject _gameController;
     private List<GameObject> _enemyPools = new List<GameObject>();
+    private GameObject _statusbarPool;
 
     [SerializeField] private float spawnDelay = 1;
     [SerializeField] private float spawnTimer;
@@ -25,6 +26,8 @@ public class EnemySpawningScript : MonoBehaviour
         {
             _enemyPools.Add(enemyPool);
         }
+
+        _statusbarPool = GameObject.FindGameObjectWithTag("Status Bar Pool");
 
         spawnTimer = spawnDelay;
     }
@@ -44,8 +47,24 @@ public class EnemySpawningScript : MonoBehaviour
     private void Spawn()
     {
         int randInt = Random.Range(0, _enemyPools.Count);
-        Debug.Log(randInt);
+
         GameObject newEnemy = _enemyPools[randInt].GetComponent<ObjectPoolScript>().GetObject();
         newEnemy.transform.position = _enemySpawnPoint.transform.position + new Vector3(0, 0.75f, 0);
+        BaseEnemyScript newEnemyScript = newEnemy.GetComponent<BaseEnemyScript>();
+
+        GameObject newStatusbar = _statusbarPool.GetComponent<ObjectPoolScript>().GetObject();
+        newStatusbar.GetComponent<StatusBarScript>()
+            .SetUpBar(newEnemyScript.health, newEnemyScript.shield, newEnemyScript.armor);
+        newStatusbar.GetComponent<StatusBarScript>().owner = newEnemy;
+
+        newEnemyScript.statusBar = newStatusbar;
+    }
+
+    public void ReturnEnemy(GameObject enemyToReturn)
+    {
+        foreach (var enemyPool in _enemyPools)
+        {
+            enemyPool.GetComponent<ObjectPoolScript>().ReturnObject(enemyToReturn);
+        }
     }
 }

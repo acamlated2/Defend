@@ -8,5 +8,9 @@ public class ArcherTowerScript : BaseTowerScript
     {
         base.Awake();
         type = TowerManagerScript.TowerType.Archer;
+
+        normalDamage = 1;
+        siegeDamage = 1;
+        magicDamage = 1;
     }
 }

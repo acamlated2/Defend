@@ -8,5 +8,13 @@ public class NormalEnemyScript : BaseEnemyScript
     {
         base.Awake();
         type = Type.Normal;
+
+        health = health * 1;
+        shield = shield * 0;
+        armor = armor * 0;
+
+        MaxHealth = health;
+        MaxShield = shield;
+        MaxArmor = armor;
     }
 }

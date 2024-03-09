@@ -3,7 +3,11 @@ guid: c1a5a7e7d85241a4da1d02c07538bfe8
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - owner: {instanceID: 0}
+  - normalmMaterial: {fileID: 2100000, guid: 68b1df89b232c924ba464edbf37aa65d, type: 2}
+  - siegeMaterial: {fileID: 2100000, guid: 3bdbcf56642ed8c43b55b9c4ef1f93c5, type: 2}
+  - magicMaterial: {fileID: 2100000, guid: e482fe7d2c46d4b4fb63376e660c2f60, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

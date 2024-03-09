@@ -8,5 +8,13 @@ public class ArmoredEnemyScript : BaseEnemyScript
     {
         base.Awake();
         type = Type.Armored;
+        
+        health = health * 0.7f;
+        shield = shield * 0.3f;
+        armor = armor * 1;
+
+        MaxHealth = health;
+        MaxShield = shield;
+        MaxArmor = armor;
     }
 }

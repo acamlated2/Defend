@@ -8,5 +8,9 @@ public class SiegeTowerScript : BaseTowerScript
     {
         base.Awake();
         type = TowerManagerScript.TowerType.Siege;
+        
+        normalDamage = 0.5f;
+        siegeDamage = 2;
+        magicDamage = 0.5f;
     }
 }

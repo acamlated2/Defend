@@ -9,7 +9,10 @@ public class BaseTowerScript : MonoBehaviour
 {
     public TowerManagerScript.TowerType type = TowerManagerScript.TowerType.Archer;
     
-    [SerializeField] protected float damage = 2;
+    [SerializeField] protected float normalDamage = 2;
+    [SerializeField] protected float siegeDamage = 2;
+    [SerializeField] protected float magicDamage = 2;
+    
     public float range = 10;
     [SerializeField] protected float defaultRange = 10;
     [SerializeField] protected float attackDelay = 1;
@@ -68,8 +71,11 @@ public class BaseTowerScript : MonoBehaviour
         GameObject newProjectile = _gameController.transform.GetChild(0).GetComponent<ObjectPoolScript>().GetObject();
         newProjectile.transform.position = transform.position;
         newProjectile.transform.rotation = Quaternion.LookRotation(dir);
-        newProjectile.GetComponent<ProjectileScript>().damage = damage;
+        newProjectile.GetComponent<ProjectileScript>().normalDamage = normalDamage;
+        newProjectile.GetComponent<ProjectileScript>().siegeDamage = siegeDamage;
+        newProjectile.GetComponent<ProjectileScript>().magicDamage = magicDamage;
         newProjectile.GetComponent<ProjectileScript>().owner = transform.gameObject;
+        newProjectile.GetComponent<ProjectileScript>().target = target;
     }
 
     public GameObject GetMostAdvancedEnemy()

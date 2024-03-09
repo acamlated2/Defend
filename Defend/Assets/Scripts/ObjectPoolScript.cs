@@ -38,6 +38,17 @@ public class ObjectPoolScript : MonoBehaviour
     
     public void ReturnObject(GameObject objectToReturn)
     {
+        if (!_pool.Contains(objectToReturn))
+        {
+            return;
+        }
+        
+        if (objectToReturn.tag == "Enemy")
+        {
+            GameObject statusBarPool = GameObject.FindGameObjectWithTag("Status Bar Pool");
+            statusBarPool.GetComponent<ObjectPoolScript>().ReturnObject(objectToReturn.GetComponent<BaseEnemyScript>().statusBar);
+        }
+        
         objectToReturn.SetActive(false);
     }
 
@@ -46,7 +57,14 @@ public class ObjectPoolScript : MonoBehaviour
         GameObject newObject = Instantiate(objectPrefab, transform);
         newObject.SetActive(false);
         _pool.Add(newObject);
-        newObject.transform.parent = transform;
+        newObject.transform.SetParent(transform);
+
+        if (objectPrefab.tag == "Status Bar")
+        {
+            GameObject statusBarPool = GameObject.FindGameObjectWithTag("Status Bar Pool");
+            newObject.transform.SetParent(statusBarPool.transform);
+        }
+        
         return newObject;
     }
 }

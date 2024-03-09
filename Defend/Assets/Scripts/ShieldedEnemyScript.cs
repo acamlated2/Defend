@@ -8,5 +8,13 @@ public class ShieldedEnemyScript : BaseEnemyScript
     {
         base.Awake();
         type = Type.Shielded;
+        
+        health = health * 1;
+        shield = shield * 1;
+        armor = armor * 0;
+
+        MaxHealth = health;
+        MaxShield = shield;
+        MaxArmor = armor;
     }
 }
