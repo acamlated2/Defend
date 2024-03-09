@@ -6,6 +6,14 @@ using UnityEngine.AI;
 
 public class BaseEnemyScript : MonoBehaviour
 {
+    public enum Type
+    {
+        Normal, 
+        Shielded, 
+        Armored
+    }
+
+    public Type type = Type.Normal;
     [SerializeField] protected float health = 5;
     private protected float maxHealth;
     public float damage = 1;
@@ -19,7 +27,7 @@ public class BaseEnemyScript : MonoBehaviour
         health = maxHealth;
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         maxHealth = health;
 

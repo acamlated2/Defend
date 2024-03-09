@@ -11,6 +11,7 @@ TagManager:
   - IndicatorCube
   - GroundBlock
   - Block
+  - EnemyPool
   layers:
   - Default
   - TransparentFX

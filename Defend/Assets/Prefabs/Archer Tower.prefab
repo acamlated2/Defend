@@ -80,5 +80,6 @@ MonoBehaviour:
   type: 0
   damage: 2
   range: 14
+  defaultRange: 10
   attackDelay: 1
   target: {fileID: 0}

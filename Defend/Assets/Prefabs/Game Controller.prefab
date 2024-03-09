@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2575863697195044261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2106552370278463410}
+  - component: {fileID: 1883047700374426796}
+  m_Layer: 0
+  m_Name: ShieldedEnemyPool
+  m_TagString: EnemyPool
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2106552370278463410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2575863697195044261}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7104786922605224804}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1883047700374426796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2575863697195044261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b5860a76cf8864ca515d5d179337c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectPrefab: {fileID: 5728482185046008384, guid: 65bee7ced97add14fb30af8e81f24bab, type: 3}
+  poolSize: 10
 --- !u!1 &6245946778510551571
 GameObject:
   m_ObjectHideFlags: 0
@@ -46,6 +92,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectPrefab: {fileID: 5057283633339777663, guid: 62c5be5a858543a4ebdfc35535bde838, type: 3}
   poolSize: 10
+--- !u!1 &6467685351269618399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3257676056561907370}
+  - component: {fileID: 5156679424069954586}
+  m_Layer: 0
+  m_Name: ArmoredEnemyPool
+  m_TagString: EnemyPool
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3257676056561907370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467685351269618399}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7104786922605224804}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5156679424069954586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467685351269618399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b5860a76cf8864ca515d5d179337c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectPrefab: {fileID: 4741753509152113877, guid: 668ffc0fe3c2f014b914d5b998ceabca, type: 3}
+  poolSize: 10
 --- !u!1 &7758042565732434015
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,8 +149,8 @@ GameObject:
   - component: {fileID: 5360169368549423785}
   - component: {fileID: 3148677626511207688}
   m_Layer: 0
-  m_Name: EnemyPool
-  m_TagString: Untagged
+  m_Name: NormalEnemyPool
+  m_TagString: EnemyPool
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -90,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b5860a76cf8864ca515d5d179337c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPrefab: {fileID: 6105134421932772428, guid: 5a2e70ea3d84aad4694e5de11dae2c0a, type: 3}
+  objectPrefab: {fileID: 1447280554383346629, guid: 5efeb5fab89b186498a4cc2623fcc8b5, type: 3}
   poolSize: 10
 --- !u!1 &8115894256553944581
 GameObject:
@@ -129,6 +221,8 @@ Transform:
   m_Children:
   - {fileID: 2116126826573570736}
   - {fileID: 5360169368549423785}
+  - {fileID: 2106552370278463410}
+  - {fileID: 3257676056561907370}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5581499849014581487
@@ -228,3 +322,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c63ad66f06db84ca0122550887b848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundBlocks: []
+  roadBlocks: []

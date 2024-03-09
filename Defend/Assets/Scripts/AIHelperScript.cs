@@ -82,6 +82,7 @@ public class AIHelperScript : MonoBehaviour
         }
         
         blockWithHighestSum.GetComponent<Renderer>().material.color = Color.blue;
+        blockWithHighestSum.transform.name = "oiuansodifu";
     }
 
     public void AssignCoverageValues(GameObject tower)

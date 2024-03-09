@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class EnemySpawningScript : MonoBehaviour
 {
     private GameObject _enemySpawnPoint;
 
     private GameObject _gameController;
-    private GameObject _enemyPool;
+    private List<GameObject> _enemyPools = new List<GameObject>();
 
     [SerializeField] private float spawnDelay = 1;
     [SerializeField] private float spawnTimer;
@@ -18,7 +19,12 @@ public class EnemySpawningScript : MonoBehaviour
     {
         _enemySpawnPoint = GameObject.FindGameObjectWithTag("EnemySpawningPoint");
         _gameController = GameObject.FindGameObjectWithTag("GameController");
-        _enemyPool = _gameController.transform.GetChild(1).gameObject;
+
+        GameObject[] enemyPools = GameObject.FindGameObjectsWithTag("EnemyPool");
+        foreach (var enemyPool in enemyPools)
+        {
+            _enemyPools.Add(enemyPool);
+        }
 
         spawnTimer = spawnDelay;
     }
@@ -37,7 +43,9 @@ public class EnemySpawningScript : MonoBehaviour
 
     private void Spawn()
     {
-        GameObject newEnemy = _enemyPool.GetComponent<ObjectPoolScript>().GetObject();
+        int randInt = Random.Range(0, _enemyPools.Count);
+        Debug.Log(randInt);
+        GameObject newEnemy = _enemyPools[randInt].GetComponent<ObjectPoolScript>().GetObject();
         newEnemy.transform.position = _enemySpawnPoint.transform.position + new Vector3(0, 0.75f, 0);
     }
 }
