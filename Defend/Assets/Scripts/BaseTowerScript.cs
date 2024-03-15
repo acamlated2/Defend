@@ -9,9 +9,9 @@ public class BaseTowerScript : MonoBehaviour
 {
     public TowerManagerScript.TowerType type = TowerManagerScript.TowerType.Archer;
     
-    [SerializeField] protected float normalDamage = 2;
-    [SerializeField] protected float siegeDamage = 2;
-    [SerializeField] protected float magicDamage = 2;
+    public float normalDamage = 2;
+    public float siegeDamage = 2;
+    public float magicDamage = 2;
     
     public float range = 10;
     [SerializeField] protected float defaultRange = 10;

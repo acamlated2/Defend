@@ -1,12 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AIHelperScript : MonoBehaviour
 {
     [SerializeField] private List<GameObject> groundBlocks = new List<GameObject>();
     public List<GameObject> roadBlocks = new List<GameObject>();
+    
+    [SerializeField] private float normalStrength;
+    [SerializeField] private float siegeStrength;
+    [SerializeField] private float magicStrength;
 
     private void Start()
     {
@@ -37,8 +42,7 @@ public class AIHelperScript : MonoBehaviour
 
     public void SuggestPlacement()
     {
-        GameObject tower = GetComponent<TowerManagerScript>().towerPrefabs[0];
-        GetSuggestedTowerPlacement(tower);
+        GetSuggestedTowerPlacement(GetSuggestedTower());
     }
 
     private void GetSuggestedTowerPlacement(GameObject tower)
@@ -69,7 +73,6 @@ public class AIHelperScript : MonoBehaviour
                     float roadBlockCoverageValue = roadBlocks[j].GetComponent<RoadBlockScript>().coverageValue;
                     
                     coverageSum -= roadBlockCoverageValue / towerRange;
-                    //coverageSum += 100 - roadBlockCoverageValue / float.PositiveInfinity;
                     coverageSum += towerRange - distance / towerRange;
                 }
             }
@@ -80,9 +83,23 @@ public class AIHelperScript : MonoBehaviour
                 blockWithHighestSum = groundBlocks[i];
             }
         }
+
+        switch (tower.GetComponent<BaseTowerScript>().type)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                Debug.Log("archer");
+                break;
+            
+            case TowerManagerScript.TowerType.Siege:
+                Debug.Log("siege");
+                break;
+            
+            case TowerManagerScript.TowerType.Magic:
+                Debug.Log("magic");
+                break;
+        }
         
         blockWithHighestSum.GetComponent<Renderer>().material.color = Color.blue;
-        blockWithHighestSum.transform.name = "oiuansodifu";
     }
 
     public void AssignCoverageValues(GameObject tower)
@@ -98,5 +115,59 @@ public class AIHelperScript : MonoBehaviour
                 roadBlocks[i].GetComponent<RoadBlockScript>().coverageValue += towerRange - distance / towerRange;
             }
         }
+    }
+
+    private GameObject GetSuggestedTower()
+    {
+        GameObject[] enemiesInScene = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] towersInScene = GetComponent<TowerManagerScript>().Towers.ToArray();
+        GameObject[] towerPrefabs =  GetComponent<TowerManagerScript>().towerPrefabs;
+
+        float healthTotal = 0;
+        float shieldTotal = 0;
+        float armorTotal = 0;
+        
+        for (int i = 0; i < enemiesInScene.Length; i++)
+        {
+            healthTotal += enemiesInScene[i].GetComponent<BaseEnemyScript>().health;
+            shieldTotal += enemiesInScene[i].GetComponent<BaseEnemyScript>().shield;
+            armorTotal += enemiesInScene[i].GetComponent<BaseEnemyScript>().armor;
+        }
+
+        float normalDamageTotal = 0;
+        float siegeDamageTotal = 0;
+        float magicDamageTotal = 0;
+
+        for (int i = 0; i < towersInScene.Length; i++)
+        {
+            normalDamageTotal += towersInScene[i].GetComponent<BaseTowerScript>().normalDamage;
+            siegeDamageTotal += towersInScene[i].GetComponent<BaseTowerScript>().siegeDamage;
+            magicDamageTotal += towersInScene[i].GetComponent<BaseTowerScript>().magicDamage;
+        }
+
+        float healthDangerLevel = healthTotal / 3 - normalDamageTotal;
+        float shieldDangerLevel = shieldTotal - siegeDamageTotal;
+        float armorDangerLevel = armorTotal - magicDamageTotal;
+        
+        Debug.Log("health " + healthDangerLevel);
+        Debug.Log("shield " + shieldDangerLevel);
+        Debug.Log("armor " + armorDangerLevel);
+
+        float highestDangerValue = healthDangerLevel;
+        GameObject suggestedTower = towerPrefabs[0];
+
+        if (shieldDangerLevel > highestDangerValue)
+        {
+            highestDangerValue = shieldDangerLevel;
+            suggestedTower = towerPrefabs[1];
+        }
+
+        if (armorDangerLevel > highestDangerValue)
+        {
+            highestDangerValue = armorDangerLevel;
+            suggestedTower = towerPrefabs[2];
+        }
+
+        return suggestedTower;
     }
 }
