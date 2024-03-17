@@ -30,8 +30,6 @@ public class BaseEnemyScript : MonoBehaviour
 
     private void OnEnable()
     {
-        GetComponent<NavMeshAgent>().SetDestination(new Vector3(0, 0, 0));
-        
         health = MaxHealth;
         shield = MaxShield;
         armor = MaxArmor;

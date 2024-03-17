@@ -9,6 +9,8 @@ public class BaseScript : MonoBehaviour
 
     private GameObject _gameController;
 
+    private bool _baseDestroyed;
+
     private void Awake()
     {
         _gameController = GameObject.FindGameObjectWithTag("GameController");
@@ -27,10 +29,16 @@ public class BaseScript : MonoBehaviour
 
     private void Damage(float damage)
     {
+        if (_baseDestroyed)
+        {
+            return;
+        }
+        
         health -= damage;
 
         if (health <= 0)
         {
+            _baseDestroyed = true;
             Debug.Log("Base Destroyed");
         }
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class ObjectPoolScript : MonoBehaviour
@@ -33,6 +34,11 @@ public class ObjectPoolScript : MonoBehaviour
         GameObject newObject = InstantiateNewObject();
         newObject.SetActive(true);
         poolSize = _pool.Count;
+
+        // if (newObject.GetComponent<BaseEnemyScript>())
+        // {
+        //     newObject.GetComponent<NavMeshAgent>().enabled = false;
+        // }
         return newObject;
     }
     

@@ -49,7 +49,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89479d89f58e5884c9a89c1792a95194, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   health: 5
+  shield: 5
+  armor: 5
+  damage: 1
+  statusBar: {fileID: 0}
 --- !u!33 &2262057329775820004
 MeshFilter:
   m_ObjectHideFlags: 0

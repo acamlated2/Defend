@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class EnemySpawningScript : MonoBehaviour
 {
-    private GameObject _enemySpawnPoint;
+    private GameObject[] _enemySpawnPoints;
 
     private GameObject _gameController;
     private List<GameObject> _enemyPools = new List<GameObject>();
@@ -18,7 +19,7 @@ public class EnemySpawningScript : MonoBehaviour
 
     private void Awake()
     {
-        _enemySpawnPoint = GameObject.FindGameObjectWithTag("EnemySpawningPoint");
+        _enemySpawnPoints = GameObject.FindGameObjectsWithTag("EnemySpawningPoint");
         _gameController = GameObject.FindGameObjectWithTag("GameController");
 
         GameObject[] enemyPools = GameObject.FindGameObjectsWithTag("EnemyPool");
@@ -39,17 +40,23 @@ public class EnemySpawningScript : MonoBehaviour
         if (spawnTimer <= 0)
         {
             spawnTimer = spawnDelay;
-            
-            Spawn();
+
+            for (int i = 0; i < _enemySpawnPoints.Length; i++)
+            {
+                Spawn(_enemySpawnPoints[i]);
+            }
         }
     }
 
-    private void Spawn()
+    private void Spawn(GameObject spawnPoint)
     {
         int randInt = Random.Range(0, _enemyPools.Count);
 
         GameObject newEnemy = _enemyPools[randInt].GetComponent<ObjectPoolScript>().GetObject();
-        newEnemy.transform.position = _enemySpawnPoint.transform.position + new Vector3(0, 0.75f, 0);
+        newEnemy.GetComponent<NavMeshAgent>().Warp(spawnPoint.transform.position + new Vector3(0, 0.75f, 0));
+        // newEnemy.GetComponent<NavMeshAgent>().enabled = true;
+        // newEnemy.GetComponent<NavMeshAgent>().ResetPath();
+        newEnemy.GetComponent<NavMeshAgent>().SetDestination(new Vector3(0, 0, 0));
         BaseEnemyScript newEnemyScript = newEnemy.GetComponent<BaseEnemyScript>();
 
         GameObject newStatusbar = _statusbarPool.GetComponent<ObjectPoolScript>().GetObject();
