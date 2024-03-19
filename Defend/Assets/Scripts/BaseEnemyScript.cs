@@ -28,6 +28,8 @@ public class BaseEnemyScript : MonoBehaviour
 
     public GameObject statusBar;
 
+    public float distanceToBase;
+
     private void OnEnable()
     {
         health = MaxHealth;
@@ -68,6 +70,22 @@ public class BaseEnemyScript : MonoBehaviour
             _gameController.GetComponent<EnemySpawningScript>().ReturnEnemy(gameObject);
             
             _gameController.GetComponent<TowerManagerScript>().RemoveEnemyFromTower(gameObject);
+        }
+    }
+    
+    public void GetAgentRemainingDistance()
+    {
+        if (GetComponent<NavMeshAgent>().pathPending ||
+            GetComponent<NavMeshAgent>().pathStatus == NavMeshPathStatus.PathInvalid ||
+            GetComponent<NavMeshAgent>().path.corners.Length == 0)
+        {
+            return;
+        }
+        
+        for (int i = 0; i < GetComponent<NavMeshAgent>().path.corners.Length - 1; ++i)
+        {
+            distanceToBase += Vector3.Distance(GetComponent<NavMeshAgent>().path.corners[i],
+                GetComponent<NavMeshAgent>().path.corners[i + 1]);
         }
     }
 }

@@ -89,7 +89,7 @@ public class BaseTowerScript : MonoBehaviour
             {
                 NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
 
-                float distance = GetAgentRemainingDistance(agent);
+                float distance = enemy.GetComponent<BaseEnemyScript>().distanceToBase;
 
                 if (distance < shortestDistance)
                 {
@@ -141,21 +141,5 @@ public class BaseTowerScript : MonoBehaviour
         }
 
         return 0;
-    }
-
-    private float GetAgentRemainingDistance(NavMeshAgent agent)
-    {
-        if (agent.pathPending ||
-            agent.pathStatus == NavMeshPathStatus.PathInvalid ||
-            agent.path.corners.Length == 0)
-            return float.PositiveInfinity;
-
-        float distance = 0.0f;
-        for (int i = 0; i < agent.path.corners.Length - 1; ++i)
-        {
-            distance += Vector3.Distance(agent.path.corners[i], agent.path.corners[i + 1]);
-        }
-
-        return distance;
     }
 }
