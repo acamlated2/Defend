@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,10 +6,42 @@ using UnityEngine;
 public class TowerSelectorScript : MonoBehaviour
 {
     private TowerManagerScript.TowerType selectedTowerType = TowerManagerScript.TowerType.Archer;
+    
+    private GameObject _archerTowerButton;
+    private GameObject _siegeTowerButton;
+    private GameObject _magicTowerButton;
+
+    private void Awake()
+    {
+        _archerTowerButton = GameObject.FindGameObjectWithTag("Archer Tower Button");
+        _siegeTowerButton = GameObject.FindGameObjectWithTag("Siege Tower Button");
+        _magicTowerButton = GameObject.FindGameObjectWithTag("Magic Tower Button");
+        
+        _archerTowerButton.GetComponent<TowerButtonScript>().Select();
+    }
 
     public void ChangeSelection(TowerManagerScript.TowerType type)
     {
         selectedTowerType = type;
+
+        switch (selectedTowerType)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                _archerTowerButton.GetComponent<TowerButtonScript>().Select();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _magicTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                break;
+            case TowerManagerScript.TowerType.Siege:
+                _archerTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().Select();
+                _magicTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                break;
+            case TowerManagerScript.TowerType.Magic:
+                _archerTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _magicTowerButton.GetComponent<TowerButtonScript>().Select();
+                break;
+        }
     }
 
     public TowerManagerScript.TowerType GetSelectedType()

@@ -13,6 +13,23 @@ public class AIHelperScript : MonoBehaviour
     [SerializeField] private float siegeStrength;
     [SerializeField] private float magicStrength;
 
+    private GameObject _towerSpreadSlider;
+    private GameObject _typeSensitivitySlider;
+
+    private GameObject _archerTowerButton;
+    private GameObject _siegeTowerButton;
+    private GameObject _magicTowerButton;
+
+    private void Awake()
+    {
+        _towerSpreadSlider = GameObject.FindGameObjectWithTag("Tower Spread Slider");
+        _typeSensitivitySlider = GameObject.FindGameObjectWithTag("Type Sensitivity Slider");
+
+        _archerTowerButton = GameObject.FindGameObjectWithTag("Archer Tower Button");
+        _siegeTowerButton = GameObject.FindGameObjectWithTag("Siege Tower Button");
+        _magicTowerButton = GameObject.FindGameObjectWithTag("Magic Tower Button");
+    }
+
     private void Start()
     {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
@@ -71,8 +88,9 @@ public class AIHelperScript : MonoBehaviour
                 if (distance <= towerRange)
                 {
                     float roadBlockCoverageValue = roadBlocks[j].GetComponent<RoadBlockScript>().coverageValue;
-                    
-                    coverageSum -= roadBlockCoverageValue / towerRange;
+
+                    coverageSum -= (roadBlockCoverageValue / towerRange) *
+                                   _towerSpreadSlider.GetComponent<SliderScript>().sliderValue;
                     coverageSum += towerRange - distance / towerRange;
                 }
             }
@@ -87,15 +105,21 @@ public class AIHelperScript : MonoBehaviour
         switch (tower.GetComponent<BaseTowerScript>().type)
         {
             case TowerManagerScript.TowerType.Archer:
-                Debug.Log("archer");
+                _archerTowerButton.GetComponent<TowerButtonScript>().Suggest();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 break;
             
             case TowerManagerScript.TowerType.Siege:
-                Debug.Log("siege");
+                _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().Suggest();
+                _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 break;
             
             case TowerManagerScript.TowerType.Magic:
-                Debug.Log("magic");
+                _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _magicTowerButton.GetComponent<TowerButtonScript>().Suggest();
                 break;
         }
         
@@ -146,8 +170,10 @@ public class AIHelperScript : MonoBehaviour
         }
 
         float healthDangerLevel = healthTotal / 3 - normalDamageTotal;
-        float shieldDangerLevel = shieldTotal - siegeDamageTotal;
-        float armorDangerLevel = armorTotal - magicDamageTotal;
+        float shieldDangerLevel = (shieldTotal - siegeDamageTotal) *
+                                  _typeSensitivitySlider.GetComponent<SliderScript>().sliderValue;
+        float armorDangerLevel = (armorTotal - magicDamageTotal) *
+                                 _typeSensitivitySlider.GetComponent<SliderScript>().sliderValue;
         
         Debug.Log("health " + healthDangerLevel);
         Debug.Log("shield " + shieldDangerLevel);

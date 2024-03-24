@@ -14,6 +14,11 @@ TagManager:
   - EnemyPool
   - Status Bar
   - Status Bar Pool
+  - Tower Spread Slider
+  - Type Sensitivity Slider
+  - Archer Tower Button
+  - Siege Tower Button
+  - Magic Tower Button
   layers:
   - Default
   - TransparentFX
