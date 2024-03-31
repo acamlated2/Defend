@@ -2,21 +2,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerInputController : MonoBehaviour
 {
     private Camera _camera;
 
     private GameObject _indicatorCube;
+    private GameObject _upgradeIndicatorCube;
 
     private Ray _ray;
     private RaycastHit _hit;
+
+    private GameObject _upgradeUI;
 
     private void Awake()
     {
         _camera = Camera.main;
 
         _indicatorCube = GameObject.FindGameObjectWithTag("IndicatorCube");
+        _upgradeIndicatorCube = Instantiate(_indicatorCube);
+        _upgradeIndicatorCube.transform.name = "Upgrade Indicator Cube";
+
+        _upgradeUI = GameObject.FindGameObjectWithTag("Upgrade UI");
     }
 
     private void Update()
@@ -25,12 +33,46 @@ public class PlayerInputController : MonoBehaviour
 
         if (Physics.Raycast(_ray, out _hit))
         {
-            if (_hit.transform.tag != "Block")
+            HandleTower();
+            HandleUpgrade();
+        }
+        else
+        {
+            if (Input.GetMouseButtonDown(0))
             {
-                HideIndicatorCube();
-                return;
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    return;
+                }
+                
+                _upgradeUI.GetComponent<UpgradeUIScript>().CloseUpgrade();
+                HideUpgradeIndicatorCube();
             }
+            
+            HideIndicatorCube();
+        }
+    }
 
+    private void HideIndicatorCube()
+    {
+        if (_indicatorCube.activeInHierarchy)
+        {
+            _indicatorCube.SetActive(false);
+        }
+    }
+
+    private void ShowIndicatorCube()
+    {
+        if (!_indicatorCube.activeInHierarchy)
+        {
+            _indicatorCube.SetActive(true);
+        }
+    }
+
+    private void HandleTower()
+    {
+        if (_hit.transform.CompareTag("Block"))
+        {
             if (_hit.transform.GetComponent<BlockScript>().type != BlockScript.BlockType.Ground)
             {
                 return;
@@ -49,30 +91,58 @@ public class PlayerInputController : MonoBehaviour
             
             if (Input.GetMouseButtonDown(0))
             {
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    return;
+                }
+                
                 GetComponent<TowerManagerScript>().CreateNewTower(newBlockPosition,
                     _hit.transform.GetComponent<GroundBlockScript>().height);
                 _hit.transform.GetComponent<GroundBlockScript>().hasTower = true;
             }
         }
-        else
+    }
+
+    private void HandleUpgrade()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-            HideIndicatorCube();
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            
+            if (_hit.transform.CompareTag("Tower"))
+            {
+                _upgradeUI.GetComponent<UpgradeUIScript>().OpenUpgrade(_hit.transform.gameObject);
+                
+                ShowUpgradeIndicatorCube();
+            }
+            else
+            {
+                _upgradeUI.GetComponent<UpgradeUIScript>().CloseUpgrade();
+                HideUpgradeIndicatorCube();
+            }
         }
     }
 
-    private void HideIndicatorCube()
+    private void ShowUpgradeIndicatorCube()
     {
-        if (_indicatorCube.activeInHierarchy)
+        Vector3 hitBlockPosition = _hit.transform.position;
+        Vector3 newBlockPosition = hitBlockPosition + new Vector3(0, 2, 0);
+        _upgradeIndicatorCube.transform.position = newBlockPosition;
+                
+        if (!_upgradeIndicatorCube.activeInHierarchy)
         {
-            _indicatorCube.SetActive(false);
+            _upgradeIndicatorCube.SetActive(true);
         }
     }
 
-    private void ShowIndicatorCube()
+    private void HideUpgradeIndicatorCube()
     {
-        if (!_indicatorCube.activeInHierarchy)
+        if (_upgradeIndicatorCube.activeInHierarchy)
         {
-            _indicatorCube.SetActive(true);
+            _upgradeIndicatorCube.SetActive(false);
         }
     }
 }

@@ -19,6 +19,7 @@ TagManager:
   - Archer Tower Button
   - Siege Tower Button
   - Magic Tower Button
+  - Upgrade UI
   layers:
   - Default
   - TransparentFX

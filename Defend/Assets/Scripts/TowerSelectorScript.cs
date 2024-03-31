@@ -16,7 +16,10 @@ public class TowerSelectorScript : MonoBehaviour
         _archerTowerButton = GameObject.FindGameObjectWithTag("Archer Tower Button");
         _siegeTowerButton = GameObject.FindGameObjectWithTag("Siege Tower Button");
         _magicTowerButton = GameObject.FindGameObjectWithTag("Magic Tower Button");
-        
+    }
+
+    private void Start()
+    {
         _archerTowerButton.GetComponent<TowerButtonScript>().Select();
     }
 
