@@ -51,4 +51,36 @@ public class TowerSelectorScript : MonoBehaviour
     {
         return selectedTowerType;
     }
+
+    public GameObject GetSelectedButton()
+    {
+        switch (selectedTowerType)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                return _archerTowerButton;
+            case TowerManagerScript.TowerType.Siege:
+                return _siegeTowerButton;
+            case TowerManagerScript.TowerType.Magic:
+                return _magicTowerButton;
+        }
+
+        Debug.Log("Can't find tower button");
+        return _archerTowerButton;
+    }
+
+    public GameObject GetButtonByType(TowerManagerScript.TowerType type)
+    {
+        switch (type)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                return _archerTowerButton;
+            case TowerManagerScript.TowerType.Siege:
+                return _siegeTowerButton;
+            case TowerManagerScript.TowerType.Magic:
+                return _magicTowerButton;
+        }
+
+        Debug.Log("Can't find tower button by type");
+        return _archerTowerButton;
+    }
 }

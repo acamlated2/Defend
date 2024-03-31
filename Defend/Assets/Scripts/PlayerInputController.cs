@@ -95,10 +95,16 @@ public class PlayerInputController : MonoBehaviour
                 {
                     return;
                 }
-                
-                GetComponent<TowerManagerScript>().CreateNewTower(newBlockPosition,
-                    _hit.transform.GetComponent<GroundBlockScript>().height);
-                _hit.transform.GetComponent<GroundBlockScript>().hasTower = true;
+
+                if (GetComponent<TowerManagerScript>().CreateNewTower(newBlockPosition,
+                        _hit.transform.GetComponent<GroundBlockScript>().height))
+                {
+                    _hit.transform.GetComponent<GroundBlockScript>().hasTower = true;
+                }
+                else
+                {
+                    GetComponent<TowerSelectorScript>().GetSelectedButton().GetComponent<TowerButtonScript>().Shake();
+                }
             }
         }
     }

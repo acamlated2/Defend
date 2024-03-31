@@ -12,6 +12,12 @@ public class BaseTowerScript : MonoBehaviour
     public float normalDamage = 2;
     public float siegeDamage = 2;
     public float magicDamage = 2;
+
+    public float normalDamageUpgradePrice = 10;
+    public float siegeDamageUpgradePrice = 10;
+    public float magicDamageUpgradePrice = 10;
+
+    public float upgradePriceIncrement = 10;
     
     public float range = 10;
     [SerializeField] protected float defaultRange = 10;

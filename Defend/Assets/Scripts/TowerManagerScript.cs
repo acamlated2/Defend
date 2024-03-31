@@ -37,9 +37,16 @@ public class TowerManagerScript : MonoBehaviour
         }
     }
 
-    public void CreateNewTower(Vector3 position, int height)
+    public bool CreateNewTower(Vector3 position, int height)
     {
         TowerType type = GetComponent<TowerSelectorScript>().GetSelectedType();
+        
+        if (!GetComponent<EconomyManager>().CanBuyTower(type))
+        {
+            return false;
+        }
+        
+        GetComponent<EconomyManager>().BuyTower(type);
 
         for (int i = 0; i < towerPrefabs.Length; i++)
         {
@@ -55,5 +62,6 @@ public class TowerManagerScript : MonoBehaviour
                 break;
             }
         }
+        return true;
     }
 }

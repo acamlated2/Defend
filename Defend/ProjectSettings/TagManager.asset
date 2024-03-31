@@ -20,6 +20,7 @@ TagManager:
   - Siege Tower Button
   - Magic Tower Button
   - Upgrade UI
+  - Player Money UI
   layers:
   - Default
   - TransparentFX

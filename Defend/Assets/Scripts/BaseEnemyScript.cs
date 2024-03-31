@@ -30,6 +30,8 @@ public class BaseEnemyScript : MonoBehaviour
 
     public float distanceToBase;
 
+    [SerializeField] private float moneyValue = 5;
+
     private void OnEnable()
     {
         health = MaxHealth;
@@ -70,6 +72,8 @@ public class BaseEnemyScript : MonoBehaviour
             _gameController.GetComponent<EnemySpawningScript>().ReturnEnemy(gameObject);
             
             _gameController.GetComponent<TowerManagerScript>().RemoveEnemyFromTower(gameObject);
+            
+            _gameController.GetComponent<EconomyManager>().AddMoney(moneyValue);
         }
     }
     
