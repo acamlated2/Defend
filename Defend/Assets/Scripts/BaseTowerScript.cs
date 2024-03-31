@@ -17,6 +17,7 @@ public class BaseTowerScript : MonoBehaviour
     public float siegeDamageUpgradePrice = 10;
     public float magicDamageUpgradePrice = 10;
 
+    public float upgradeDamageIncrement = 1;
     public float upgradePriceIncrement = 10;
     
     public float range = 10;
@@ -147,5 +148,37 @@ public class BaseTowerScript : MonoBehaviour
         }
 
         return 0;
+    }
+
+    public float GetTypeSpecificDamageByType(TowerManagerScript.TowerType towerType)
+    {
+        switch (towerType)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                return normalDamage;
+            case TowerManagerScript.TowerType.Siege:
+                return siegeDamage;
+            case TowerManagerScript.TowerType.Magic:
+                return magicDamage;
+        }
+        
+        Debug.Log("Tower type not found");
+        return normalDamage;
+    }
+
+    public float GetTypeSpecificUpgradePriceByType(TowerManagerScript.TowerType towerType)
+    {
+        switch (towerType)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                return normalDamageUpgradePrice;
+            case TowerManagerScript.TowerType.Siege:
+                return siegeDamageUpgradePrice;
+            case TowerManagerScript.TowerType.Magic:
+                return magicDamageUpgradePrice;
+        }
+        
+        Debug.Log("Tower type not found");
+        return normalDamage;
     }
 }

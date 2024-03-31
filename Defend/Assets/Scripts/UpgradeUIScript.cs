@@ -26,6 +26,9 @@ public class UpgradeUIScript : MonoBehaviour
     private float _shakeTime;
 
     private Vector3 _defaultPosition = new Vector3();
+    private Vector3 _normalDamageButtonDefaultPosition;
+    private Vector3 _siegeDamageButtonDefaultPosition;
+    private Vector3 _magicDamageButtonDefaultPosition;
 
     private EconomyManager _economyManager;
 
@@ -48,6 +51,9 @@ public class UpgradeUIScript : MonoBehaviour
         _magicDamageButton.onClick.AddListener(UpgradeMagic);
 
         _defaultPosition = transform.position;
+        _normalDamageButtonDefaultPosition = _normalDamageButton.transform.position;
+        _siegeDamageButtonDefaultPosition = _siegeDamageButton.transform.position;
+        _magicDamageButtonDefaultPosition = _magicDamageButton.transform.position;
 
         _economyManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<EconomyManager>();
     }
@@ -78,10 +84,11 @@ public class UpgradeUIScript : MonoBehaviour
         
         if (_economyManager.CanBuyUpgrade(towerScript.normalDamageUpgradePrice))
         {
-            towerScript.normalDamage += 1;
+            towerScript.normalDamage += towerScript.upgradeDamageIncrement;
             _economyManager.ReduceMoney(towerScript.normalDamageUpgradePrice);
             towerScript.normalDamageUpgradePrice += towerScript.upgradePriceIncrement;
             ChangeValues();
+            UnSuggestUpgrades();
         }
         else
         {
@@ -95,10 +102,11 @@ public class UpgradeUIScript : MonoBehaviour
         
         if (_economyManager.CanBuyUpgrade(towerScript.siegeDamageUpgradePrice))
         {
-            towerScript.siegeDamage += 1;
+            towerScript.siegeDamage += towerScript.upgradeDamageIncrement;
             _economyManager.ReduceMoney(towerScript.siegeDamageUpgradePrice);
             towerScript.siegeDamageUpgradePrice += towerScript.upgradePriceIncrement;
             ChangeValues();
+            UnSuggestUpgrades();
         }
         else
         {
@@ -112,10 +120,11 @@ public class UpgradeUIScript : MonoBehaviour
         
         if (_economyManager.CanBuyUpgrade(towerScript.magicDamageUpgradePrice))
         {
-            towerScript.magicDamage += 1;
+            towerScript.magicDamage += towerScript.upgradeDamageIncrement;
             _economyManager.ReduceMoney(towerScript.magicDamageUpgradePrice);
             towerScript.magicDamageUpgradePrice += towerScript.upgradePriceIncrement;
             ChangeValues();
+            UnSuggestUpgrades();
         }
         else
         {
@@ -146,5 +155,31 @@ public class UpgradeUIScript : MonoBehaviour
     public void CloseUpgrade()
     {
         gameObject.SetActive(false);
+        UnSuggestUpgrades();
+    }
+
+    public void SuggestByType(TowerManagerScript.TowerType type)
+    {
+        switch (type)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                _normalDamageButton.transform.position = _normalDamageButtonDefaultPosition + new Vector3(0, 20, 0);
+                break;
+            case TowerManagerScript.TowerType.Siege:
+                _siegeDamageButton.transform.position = _siegeDamageButtonDefaultPosition + new Vector3(0, 20, 0);
+                break;
+            case TowerManagerScript.TowerType.Magic:
+                _magicDamageButton.transform.position = _magicDamageButtonDefaultPosition + new Vector3(0, 20, 0);
+                break;
+        }
+        
+        Debug.Log("Tower type not found");
+    }
+
+    public void UnSuggestUpgrades()
+    {
+        _normalDamageButton.transform.position = _normalDamageButtonDefaultPosition;
+        _siegeDamageButton.transform.position = _siegeDamageButtonDefaultPosition;
+        _magicDamageButton.transform.position = _magicDamageButtonDefaultPosition;
     }
 }

@@ -134,9 +134,7 @@ public class PlayerInputController : MonoBehaviour
 
     private void ShowUpgradeIndicatorCube()
     {
-        Vector3 hitBlockPosition = _hit.transform.position;
-        Vector3 newBlockPosition = hitBlockPosition + new Vector3(0, 2, 0);
-        _upgradeIndicatorCube.transform.position = newBlockPosition;
+        IndicateObject(_hit.transform.gameObject);
                 
         if (!_upgradeIndicatorCube.activeInHierarchy)
         {
@@ -144,11 +142,23 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
-    private void HideUpgradeIndicatorCube()
+    public void HideUpgradeIndicatorCube()
     {
         if (_upgradeIndicatorCube.activeInHierarchy)
         {
             _upgradeIndicatorCube.SetActive(false);
+        }
+    }
+
+    public void IndicateObject(GameObject block)
+    {
+        Vector3 blockPosition = block.transform.position;
+        Vector3 newBlockPosition = blockPosition + new Vector3(0, 2, 0);
+        _upgradeIndicatorCube.transform.position = newBlockPosition;
+                
+        if (!_upgradeIndicatorCube.activeInHierarchy)
+        {
+            _upgradeIndicatorCube.SetActive(true);
         }
     }
 }

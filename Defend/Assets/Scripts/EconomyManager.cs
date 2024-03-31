@@ -21,6 +21,14 @@ public class EconomyManager : MonoBehaviour
         _priceIncrement = archerTowerPrice;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown("m"))
+        {
+            AddMoney(100);
+        }
+    }
+
     public void ReduceMoney(float amount)
     {
         playerMoney -= amount;
@@ -97,5 +105,21 @@ public class EconomyManager : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public float GetTowerPriceByType(TowerManagerScript.TowerType type)
+    {
+        switch (type)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                return archerTowerPrice;
+            case TowerManagerScript.TowerType.Siege:
+                return siegeTowerPrice;
+            case TowerManagerScript.TowerType.Magic:
+                return magicTowerPrice;
+        }
+        
+        Debug.Log("Tower type not found");
+        return archerTowerPrice;
     }
 }

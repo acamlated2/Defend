@@ -21,6 +21,7 @@ TagManager:
   - Magic Tower Button
   - Upgrade UI
   - Player Money UI
+  - Upgrade Sensitivity Slider
   layers:
   - Default
   - TransparentFX

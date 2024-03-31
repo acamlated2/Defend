@@ -15,19 +15,25 @@ public class AIHelperScript : MonoBehaviour
 
     private GameObject _towerSpreadSlider;
     private GameObject _typeSensitivitySlider;
+    private GameObject _upgradeSensitivitySlider;
 
     private GameObject _archerTowerButton;
     private GameObject _siegeTowerButton;
     private GameObject _magicTowerButton;
 
+    private GameObject _upgradeUI;
+
     private void Awake()
     {
         _towerSpreadSlider = GameObject.FindGameObjectWithTag("Tower Spread Slider");
         _typeSensitivitySlider = GameObject.FindGameObjectWithTag("Type Sensitivity Slider");
+        _upgradeSensitivitySlider = GameObject.FindGameObjectWithTag("Upgrade Sensitivity Slider");
 
         _archerTowerButton = GameObject.FindGameObjectWithTag("Archer Tower Button");
         _siegeTowerButton = GameObject.FindGameObjectWithTag("Siege Tower Button");
         _magicTowerButton = GameObject.FindGameObjectWithTag("Magic Tower Button");
+
+        _upgradeUI = GameObject.FindGameObjectWithTag("Upgrade UI");
     }
 
     private void Start()
@@ -53,13 +59,33 @@ public class AIHelperScript : MonoBehaviour
     {
         if (Input.GetKeyDown("t"))
         {
-            SuggestPlacement();
+            GetSuggestion();
         }
     }
 
-    public void SuggestPlacement()
+    public void GetSuggestion()
     {
-        GetSuggestedTowerPlacement(GetSuggestedTower());
+        TowerManagerScript.TowerType suggestedType = GetSuggestedTowerType();
+        if (SuggestUpgrade(suggestedType, out GameObject suggestedTower))
+        {
+            Debug.Log("upgrade suggested");
+            _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            
+            _upgradeUI.GetComponent<UpgradeUIScript>().OpenUpgrade(suggestedTower);
+            _upgradeUI.GetComponent<UpgradeUIScript>().UnSuggestUpgrades();
+            _upgradeUI.GetComponent<UpgradeUIScript>().SuggestByType(suggestedType);
+            
+            GetComponent<PlayerInputController>().IndicateObject(suggestedTower);
+        }
+        else
+        {
+            Debug.Log("new tower suggested");
+            _upgradeUI.GetComponent<UpgradeUIScript>().CloseUpgrade();
+            GetSuggestedTowerPlacement(GetComponent<TowerManagerScript>().GetPrefabByType(suggestedType));
+            GetComponent<PlayerInputController>().HideUpgradeIndicatorCube();
+        }
     }
 
     private void GetSuggestedTowerPlacement(GameObject tower)
@@ -101,27 +127,6 @@ public class AIHelperScript : MonoBehaviour
                 blockWithHighestSum = groundBlocks[i];
             }
         }
-
-        switch (tower.GetComponent<BaseTowerScript>().type)
-        {
-            case TowerManagerScript.TowerType.Archer:
-                _archerTowerButton.GetComponent<TowerButtonScript>().Suggest();
-                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-                _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-                break;
-            
-            case TowerManagerScript.TowerType.Siege:
-                _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-                _siegeTowerButton.GetComponent<TowerButtonScript>().Suggest();
-                _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-                break;
-            
-            case TowerManagerScript.TowerType.Magic:
-                _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-                _magicTowerButton.GetComponent<TowerButtonScript>().Suggest();
-                break;
-        }
         
         blockWithHighestSum.GetComponent<Renderer>().material.color = Color.blue;
     }
@@ -141,11 +146,10 @@ public class AIHelperScript : MonoBehaviour
         }
     }
 
-    private GameObject GetSuggestedTower()
+    private TowerManagerScript.TowerType GetSuggestedTowerType()
     {
         GameObject[] enemiesInScene = GameObject.FindGameObjectsWithTag("Enemy");
         GameObject[] towersInScene = GetComponent<TowerManagerScript>().Towers.ToArray();
-        GameObject[] towerPrefabs =  GetComponent<TowerManagerScript>().towerPrefabs;
 
         float healthTotal = 0;
         float shieldTotal = 0;
@@ -180,20 +184,86 @@ public class AIHelperScript : MonoBehaviour
         Debug.Log("armor " + armorDangerLevel);
 
         float highestDangerValue = healthDangerLevel;
-        GameObject suggestedTower = towerPrefabs[0];
+        TowerManagerScript.TowerType suggestedTowerType = TowerManagerScript.TowerType.Archer;
 
         if (shieldDangerLevel > highestDangerValue)
         {
             highestDangerValue = shieldDangerLevel;
-            suggestedTower = towerPrefabs[1];
+            suggestedTowerType = TowerManagerScript.TowerType.Siege;
         }
 
         if (armorDangerLevel > highestDangerValue)
         {
             highestDangerValue = armorDangerLevel;
-            suggestedTower = towerPrefabs[2];
+            suggestedTowerType = TowerManagerScript.TowerType.Magic;
+        }
+        
+        switch (suggestedTowerType)
+        {
+            case TowerManagerScript.TowerType.Archer:
+                _archerTowerButton.GetComponent<TowerButtonScript>().Suggest();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                break;
+            
+            case TowerManagerScript.TowerType.Siege:
+                _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().Suggest();
+                _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                break;
+            
+            case TowerManagerScript.TowerType.Magic:
+                _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _magicTowerButton.GetComponent<TowerButtonScript>().Suggest();
+                break;
         }
 
-        return suggestedTower;
+        return suggestedTowerType;
+    }
+
+    private bool SuggestUpgrade(TowerManagerScript.TowerType type, out GameObject suggestedTower)
+    {
+        TowerManagerScript towerManagerScript = GetComponent<TowerManagerScript>();
+        
+        float newTypeSpecificDamage = towerManagerScript.GetPrefabByType(type)
+            .GetComponent<BaseTowerScript>().GetTypeSpecificDamageByType(type);
+        float newTowerPrice = GetComponent<EconomyManager>().GetTowerPriceByType(type);
+
+        float bestProjectedPrice = float.PositiveInfinity;
+        GameObject bestSuggestedTower = new GameObject();
+        
+        for (int i = 0; i < towerManagerScript.Towers.Count; i++)
+        {
+            float upgradeDamageIncrement =
+                towerManagerScript.Towers[i].GetComponent<BaseTowerScript>().upgradeDamageIncrement;
+
+            float projectedDamage = 0;
+            float projectedPrice = 0;
+
+            suggestedTower = towerManagerScript.Towers[i];
+
+            while (projectedDamage < newTypeSpecificDamage)
+            {
+                projectedDamage += upgradeDamageIncrement;
+                projectedPrice +=
+                    towerManagerScript.Towers[i].GetComponent<BaseTowerScript>()
+                        .GetTypeSpecificUpgradePriceByType(type);
+            }
+            
+            if (projectedPrice <= bestProjectedPrice)
+            {
+                bestProjectedPrice = projectedPrice;
+                bestSuggestedTower = suggestedTower;
+            }
+        }
+        
+        suggestedTower = bestSuggestedTower;
+        
+        if (bestProjectedPrice < newTowerPrice * _upgradeSensitivitySlider.GetComponent<SliderScript>().sliderValue)
+        {
+            return true;
+        }
+        return false;
     }
 }

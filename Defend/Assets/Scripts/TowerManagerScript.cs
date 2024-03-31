@@ -14,7 +14,7 @@ public class TowerManagerScript : MonoBehaviour
     
     public GameObject[] towerPrefabs;
     
-    public HashSet<GameObject> Towers = new HashSet<GameObject>();
+    public List<GameObject> Towers = new List<GameObject>();
 
     public void AddToSet(GameObject tower)
     {
@@ -63,5 +63,21 @@ public class TowerManagerScript : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public GameObject GetPrefabByType(TowerType type)
+    {
+        switch (type)
+        {
+            case TowerType.Archer:
+                return towerPrefabs[0];
+            case TowerType.Siege:
+                return towerPrefabs[1];
+            case TowerType.Magic:
+                return towerPrefabs[2];
+        }
+        
+        Debug.Log("Tower type not found");
+        return towerPrefabs[0];
     }
 }
