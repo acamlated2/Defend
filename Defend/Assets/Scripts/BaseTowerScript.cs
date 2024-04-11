@@ -132,22 +132,7 @@ public class BaseTowerScript : MonoBehaviour
 
     public float CalculateRange(int height)
     {
-        switch (height)
-        {
-            case 0:
-                return 10;
-                    
-            case 1:
-                return 12;
-                    
-            case 2:
-                return 14;
-                    
-            case 3:
-                return 15;
-        }
-
-        return 0;
+        return 10 + 2 * height;
     }
 
     public float GetTypeSpecificDamageByType(TowerManagerScript.TowerType towerType)

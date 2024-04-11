@@ -96,6 +96,17 @@ public class PlayerInputController : MonoBehaviour
                     return;
                 }
 
+                TowerSelectorScript towerSelectorScript = GetComponent<TowerSelectorScript>();
+
+                if (towerSelectorScript.GetSelectedType() == TowerManagerScript.TowerType.Stool)
+                {
+                    if (!GetComponent<TowerManagerScript>().CreateNewStool(_hit.transform.gameObject))
+                    {
+                        towerSelectorScript.GetSelectedButton().GetComponent<TowerButtonScript>().Shake();
+                    }
+                    return;
+                }
+
                 if (GetComponent<TowerManagerScript>().CreateNewTower(newBlockPosition,
                         _hit.transform.GetComponent<GroundBlockScript>().height))
                 {
@@ -103,7 +114,7 @@ public class PlayerInputController : MonoBehaviour
                 }
                 else
                 {
-                    GetComponent<TowerSelectorScript>().GetSelectedButton().GetComponent<TowerButtonScript>().Shake();
+                    towerSelectorScript.GetSelectedButton().GetComponent<TowerButtonScript>().Shake();
                 }
             }
         }

@@ -22,6 +22,7 @@ TagManager:
   - Upgrade UI
   - Player Money UI
   - Upgrade Sensitivity Slider
+  - Stool Tower Button
   layers:
   - Default
   - TransparentFX

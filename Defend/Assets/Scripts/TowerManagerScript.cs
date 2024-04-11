@@ -9,7 +9,8 @@ public class TowerManagerScript : MonoBehaviour
     {
         Archer, 
         Siege, 
-        Magic
+        Magic, 
+        Stool,
     }
     
     public GameObject[] towerPrefabs;
@@ -62,6 +63,22 @@ public class TowerManagerScript : MonoBehaviour
                 break;
             }
         }
+        return true;
+    }
+
+    public bool CreateNewStool(GameObject block)
+    {
+        TowerType type = GetComponent<TowerSelectorScript>().GetSelectedType();
+        
+        if (!GetComponent<EconomyManager>().CanBuyTower(type))
+        {
+            return false;
+        }
+        
+        GetComponent<EconomyManager>().BuyTower(type);
+        
+        block.GetComponent<GroundBlockScript>().AddStool();
+
         return true;
     }
 

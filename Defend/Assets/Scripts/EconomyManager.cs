@@ -11,14 +11,14 @@ public class EconomyManager : MonoBehaviour
     [SerializeField] private float archerTowerPrice = 10;
     [SerializeField] private float siegeTowerPrice = 10;
     [SerializeField] private float magicTowerPrice = 10;
+    [SerializeField] private float stoolTowerPrice = 50;
 
-    private float _priceIncrement;
+    [SerializeField] private float towerPriceIncrement = 10;
+    [SerializeField] private float stoolPriceIncrement = 20;
 
     private void Awake()
     {
         _playerMoneyUI = GameObject.FindGameObjectWithTag("Player Money UI");
-
-        _priceIncrement = archerTowerPrice;
     }
 
     private void Update()
@@ -49,21 +49,27 @@ public class EconomyManager : MonoBehaviour
         {
             case TowerManagerScript.TowerType.Archer:
                 ReduceMoney(archerTowerPrice);
-                archerTowerPrice += _priceIncrement;
+                archerTowerPrice += towerPriceIncrement;
                 towerSelectorScript.GetButtonByType(TowerManagerScript.TowerType.Archer)
-                    .GetComponent<TowerButtonScript>().ChangePrice(archerTowerPrice);
+                                   .GetComponent<TowerButtonScript>().ChangePrice(archerTowerPrice);
                 break;
             case TowerManagerScript.TowerType.Siege:
                 ReduceMoney(siegeTowerPrice);
-                siegeTowerPrice += _priceIncrement;
+                siegeTowerPrice += towerPriceIncrement;
                 towerSelectorScript.GetButtonByType(TowerManagerScript.TowerType.Siege)
-                    .GetComponent<TowerButtonScript>().ChangePrice(siegeTowerPrice);
+                                   .GetComponent<TowerButtonScript>().ChangePrice(siegeTowerPrice);
                 break;
             case TowerManagerScript.TowerType.Magic:
                 ReduceMoney(magicTowerPrice);
-                magicTowerPrice += _priceIncrement;
+                magicTowerPrice += towerPriceIncrement;
                 towerSelectorScript.GetButtonByType(TowerManagerScript.TowerType.Magic)
-                    .GetComponent<TowerButtonScript>().ChangePrice(magicTowerPrice);
+                                   .GetComponent<TowerButtonScript>().ChangePrice(magicTowerPrice);
+                break;
+            case TowerManagerScript.TowerType.Stool:
+                ReduceMoney(stoolTowerPrice);
+                stoolTowerPrice += stoolPriceIncrement;
+                towerSelectorScript.GetButtonByType(TowerManagerScript.TowerType.Stool)
+                                   .GetComponent<TowerButtonScript>().ChangePrice(stoolTowerPrice);
                 break;
         }
     }
@@ -86,6 +92,12 @@ public class EconomyManager : MonoBehaviour
                 break;
             case TowerManagerScript.TowerType.Magic:
                 if (playerMoney >= magicTowerPrice)
+                {
+                    return true;
+                }
+                break;
+            case TowerManagerScript.TowerType.Stool:
+                if (playerMoney >= stoolTowerPrice)
                 {
                     return true;
                 }
@@ -117,6 +129,8 @@ public class EconomyManager : MonoBehaviour
                 return siegeTowerPrice;
             case TowerManagerScript.TowerType.Magic:
                 return magicTowerPrice;
+            case TowerManagerScript.TowerType.Stool:
+                return stoolTowerPrice;
         }
         
         Debug.Log("Tower type not found");

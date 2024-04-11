@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GroundBlockScript : BlockScript
 {
@@ -57,5 +59,16 @@ public class GroundBlockScript : BlockScript
     {
         GameObject newStool = Instantiate(stoolBlockPrefab, pos, Quaternion.identity);
         newStool.transform.SetParent(transform);
+    }
+
+    public void AddStool()
+    {
+        var position = transform.position;
+        position = new Vector3(position.x, position.y + 0.25f, position.z);
+        transform.position = position;
+
+        height += 1;
+        
+        CreateStool(new Vector3(position.x, position.y - 1.125f - 0.25f * (height - 1), position.z));
     }
 }

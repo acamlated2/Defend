@@ -10,12 +10,14 @@ public class TowerSelectorScript : MonoBehaviour
     private GameObject _archerTowerButton;
     private GameObject _siegeTowerButton;
     private GameObject _magicTowerButton;
+    private GameObject _stoolTowerButton;
 
     private void Awake()
     {
         _archerTowerButton = GameObject.FindGameObjectWithTag("Archer Tower Button");
         _siegeTowerButton = GameObject.FindGameObjectWithTag("Siege Tower Button");
         _magicTowerButton = GameObject.FindGameObjectWithTag("Magic Tower Button");
+        _stoolTowerButton = GameObject.FindGameObjectWithTag("Stool Tower Button");
     }
 
     private void Start()
@@ -33,16 +35,25 @@ public class TowerSelectorScript : MonoBehaviour
                 _archerTowerButton.GetComponent<TowerButtonScript>().Select();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().UnSelect();
                 _magicTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSelect();
                 break;
             case TowerManagerScript.TowerType.Siege:
                 _archerTowerButton.GetComponent<TowerButtonScript>().UnSelect();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().Select();
                 _magicTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSelect();
                 break;
             case TowerManagerScript.TowerType.Magic:
                 _archerTowerButton.GetComponent<TowerButtonScript>().UnSelect();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().UnSelect();
                 _magicTowerButton.GetComponent<TowerButtonScript>().Select();
+                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                break;
+            case TowerManagerScript.TowerType.Stool:
+                _archerTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _siegeTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _magicTowerButton.GetComponent<TowerButtonScript>().UnSelect();
+                _stoolTowerButton.GetComponent<TowerButtonScript>().Select();
                 break;
         }
     }
@@ -62,6 +73,8 @@ public class TowerSelectorScript : MonoBehaviour
                 return _siegeTowerButton;
             case TowerManagerScript.TowerType.Magic:
                 return _magicTowerButton;
+            case TowerManagerScript.TowerType.Stool:
+                return _stoolTowerButton;
         }
 
         Debug.Log("Can't find tower button");
@@ -78,6 +91,8 @@ public class TowerSelectorScript : MonoBehaviour
                 return _siegeTowerButton;
             case TowerManagerScript.TowerType.Magic:
                 return _magicTowerButton;
+            case TowerManagerScript.TowerType.Stool:
+                return _stoolTowerButton;
         }
 
         Debug.Log("Can't find tower button by type");
