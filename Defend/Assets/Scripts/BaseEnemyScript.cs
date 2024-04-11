@@ -85,6 +85,8 @@ public class BaseEnemyScript : MonoBehaviour
         {
             return;
         }
+
+        distanceToBase = 0;
         
         for (int i = 0; i < GetComponent<NavMeshAgent>().path.corners.Length - 1; ++i)
         {

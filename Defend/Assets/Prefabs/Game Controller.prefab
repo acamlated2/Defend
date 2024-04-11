@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c4be8e7a14485044a70defa3c8a788f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnDelay: 1
+  spawnDelay: 3
   spawnTimer: 0
 --- !u!114 &7190124269706548953
 MonoBehaviour:
@@ -299,6 +299,7 @@ MonoBehaviour:
   - {fileID: 6653031405778000403, guid: 7dea58e583bc73a45ae17ef980f92edb, type: 3}
   - {fileID: 3686433717658652016, guid: 4b15dffe0dadb5843ac1e666a86f651b, type: 3}
   - {fileID: 2536690656366617704, guid: 6c79255a6d26a8c4a977d94f08d92f10, type: 3}
+  Towers: []
 --- !u!114 &6573572873325379793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,9 +326,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundBlocks: []
   roadBlocks: []
-  normalStrength: 0
-  siegeStrength: 0
-  magicStrength: 0
 --- !u!114 &6418743232206177084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,3 +338,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7ca89ead4720464ea8e2d07a673504d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerMoney: 50
+  archerTowerPrice: 10
+  siegeTowerPrice: 10
+  magicTowerPrice: 10
+  stoolTowerPrice: 50
+  towerPriceIncrement: 10
+  stoolPriceIncrement: 20

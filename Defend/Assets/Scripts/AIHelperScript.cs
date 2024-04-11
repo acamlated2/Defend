@@ -8,10 +8,6 @@ public class AIHelperScript : MonoBehaviour
 {
     [SerializeField] private List<GameObject> groundBlocks = new List<GameObject>();
     public List<GameObject> roadBlocks = new List<GameObject>();
-    
-    [SerializeField] private float normalStrength;
-    [SerializeField] private float siegeStrength;
-    [SerializeField] private float magicStrength;
 
     private GameObject _towerSpreadSlider;
     private GameObject _typeSensitivitySlider;
@@ -40,16 +36,16 @@ public class AIHelperScript : MonoBehaviour
     {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
 
-        for (int i = 0; i < blocks.Length; i++)
+        foreach (var block in blocks)
         {
-            switch (blocks[i].GetComponent<BlockScript>().type)
+            switch (block.GetComponent<BlockScript>().type)
             {
                 case BlockScript.BlockType.Ground:
-                    groundBlocks.Add(blocks[i].gameObject);
+                    groundBlocks.Add(block.gameObject);
                     break;
                 
                 case BlockScript.BlockType.Road:
-                    roadBlocks.Add(blocks[i].gameObject);
+                    roadBlocks.Add(block.gameObject);
                     break;
             }
         }
@@ -63,7 +59,7 @@ public class AIHelperScript : MonoBehaviour
         }
     }
 
-    public void GetSuggestion()
+    private void GetSuggestion()
     {
         TowerManagerScript.TowerType suggestedType = GetSuggestedTowerType();
         if (SuggestUpgrade(suggestedType, out GameObject suggestedTower))
@@ -93,27 +89,27 @@ public class AIHelperScript : MonoBehaviour
         float highestCoverageSum = float.NegativeInfinity;
         GameObject blockWithHighestSum = new GameObject();
         
-        for (int i = 0; i < groundBlocks.Count; i++)
+        foreach (var groundBlock in groundBlocks)
         {
-            if (groundBlocks[i].GetComponent<GroundBlockScript>().hasTower)
+            if (groundBlock.GetComponent<GroundBlockScript>().hasTower)
             {
                 continue;
             }
 
             float towerRange = tower.GetComponent<BaseTowerScript>()
-                .CalculateRange(groundBlocks[i].GetComponent<GroundBlockScript>().height);
+                                    .CalculateRange(groundBlock.GetComponent<GroundBlockScript>().height);
             
-            Vector3 towerLocation = groundBlocks[i].transform.position + new Vector3(0, 2, 0);
+            Vector3 towerLocation = groundBlock.transform.position + new Vector3(0, 2, 0);
 
             float coverageSum = 0;
             
-            for (int j = 0; j < roadBlocks.Count; j++)
+            foreach (var roadblock in roadBlocks)
             {
-                float distance = Vector3.Distance(towerLocation, roadBlocks[j].transform.position);
+                float distance = Vector3.Distance(towerLocation, roadblock.transform.position);
                 
                 if (distance <= towerRange)
                 {
-                    float roadBlockCoverageValue = roadBlocks[j].GetComponent<RoadBlockScript>().coverageValue;
+                    float roadBlockCoverageValue = roadblock.GetComponent<RoadBlockScript>().coverageValue;
 
                     coverageSum -= (roadBlockCoverageValue / towerRange) *
                                    _towerSpreadSlider.GetComponent<SliderScript>().sliderValue;
@@ -124,7 +120,7 @@ public class AIHelperScript : MonoBehaviour
             if (coverageSum >= highestCoverageSum)
             {
                 highestCoverageSum = coverageSum;
-                blockWithHighestSum = groundBlocks[i];
+                blockWithHighestSum = groundBlock;
             }
         }
         
@@ -134,14 +130,14 @@ public class AIHelperScript : MonoBehaviour
     public void AssignCoverageValues(GameObject tower)
     {
         float towerRange = tower.GetComponent<BaseTowerScript>().range;
-        
-        for (int i = 0; i < roadBlocks.Count; i++)
+
+        foreach (var roadBlock in roadBlocks)
         {
-            float distance = Vector3.Distance(tower.transform.position, roadBlocks[i].transform.position);
+            float distance = Vector3.Distance(tower.transform.position, roadBlock.transform.position);
 
             if (distance <= towerRange)
             {
-                roadBlocks[i].GetComponent<RoadBlockScript>().coverageValue += towerRange - distance / towerRange;
+                roadBlock.GetComponent<RoadBlockScript>().coverageValue += towerRange - distance / towerRange;
             }
         }
     }
@@ -155,22 +151,22 @@ public class AIHelperScript : MonoBehaviour
         float shieldTotal = 0;
         float armorTotal = 0;
         
-        for (int i = 0; i < enemiesInScene.Length; i++)
+        foreach (var enemy in enemiesInScene)
         {
-            healthTotal += enemiesInScene[i].GetComponent<BaseEnemyScript>().health;
-            shieldTotal += enemiesInScene[i].GetComponent<BaseEnemyScript>().shield;
-            armorTotal += enemiesInScene[i].GetComponent<BaseEnemyScript>().armor;
+            healthTotal += enemy.GetComponent<BaseEnemyScript>().health;
+            shieldTotal += enemy.GetComponent<BaseEnemyScript>().shield;
+            armorTotal += enemy.GetComponent<BaseEnemyScript>().armor;
         }
 
         float normalDamageTotal = 0;
         float siegeDamageTotal = 0;
         float magicDamageTotal = 0;
 
-        for (int i = 0; i < towersInScene.Length; i++)
+        foreach (var tower in towersInScene)
         {
-            normalDamageTotal += towersInScene[i].GetComponent<BaseTowerScript>().normalDamage;
-            siegeDamageTotal += towersInScene[i].GetComponent<BaseTowerScript>().siegeDamage;
-            magicDamageTotal += towersInScene[i].GetComponent<BaseTowerScript>().magicDamage;
+            normalDamageTotal += tower.GetComponent<BaseTowerScript>().normalDamage;
+            siegeDamageTotal += tower.GetComponent<BaseTowerScript>().siegeDamage;
+            magicDamageTotal += tower.GetComponent<BaseTowerScript>().magicDamage;
         }
 
         float healthDangerLevel = healthTotal / 3 - normalDamageTotal;
@@ -194,7 +190,6 @@ public class AIHelperScript : MonoBehaviour
 
         if (armorDangerLevel > highestDangerValue)
         {
-            highestDangerValue = armorDangerLevel;
             suggestedTowerType = TowerManagerScript.TowerType.Magic;
         }
         
@@ -233,22 +228,22 @@ public class AIHelperScript : MonoBehaviour
         float bestProjectedPrice = float.PositiveInfinity;
         GameObject bestSuggestedTower = new GameObject();
         
-        for (int i = 0; i < towerManagerScript.Towers.Count; i++)
+        foreach (var tower in towerManagerScript.Towers)
         {
             float upgradeDamageIncrement =
-                towerManagerScript.Towers[i].GetComponent<BaseTowerScript>().upgradeDamageIncrement;
+                tower.GetComponent<BaseTowerScript>().upgradeDamageIncrement;
 
             float projectedDamage = 0;
-            float projectedPrice = 0;
+            float projectedPrice  = 0;
 
-            suggestedTower = towerManagerScript.Towers[i];
+            suggestedTower = tower;
 
             while (projectedDamage < newTypeSpecificDamage)
             {
                 projectedDamage += upgradeDamageIncrement;
                 projectedPrice +=
-                    towerManagerScript.Towers[i].GetComponent<BaseTowerScript>()
-                        .GetTypeSpecificUpgradePriceByType(type);
+                    tower.GetComponent<BaseTowerScript>()
+                     .GetTypeSpecificUpgradePriceByType(type);
             }
             
             if (projectedPrice <= bestProjectedPrice)

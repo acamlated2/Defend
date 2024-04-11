@@ -94,9 +94,10 @@ public class BaseTowerScript : MonoBehaviour
 
             foreach (var enemy in enemiesInRange)
             {
-                NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
-
-                float distance = enemy.GetComponent<BaseEnemyScript>().distanceToBase;
+                BaseEnemyScript enemyScript = enemy.GetComponent<BaseEnemyScript>();
+                
+                enemyScript.GetAgentRemainingDistance();
+                float distance = enemyScript.distanceToBase;
 
                 if (distance < shortestDistance)
                 {

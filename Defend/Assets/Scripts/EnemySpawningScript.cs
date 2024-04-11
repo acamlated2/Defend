@@ -14,7 +14,7 @@ public class EnemySpawningScript : MonoBehaviour
     private List<GameObject> _enemyPools = new List<GameObject>();
     private GameObject _statusbarPool;
 
-    [SerializeField] private float spawnDelay = 1;
+    [SerializeField] private float spawnDelay = 3;
     [SerializeField] private float spawnTimer;
 
     private void Awake()
