@@ -164,13 +164,13 @@ public class UpgradeUIScript : MonoBehaviour
         {
             case TowerManagerScript.TowerType.Archer:
                 _normalDamageButton.transform.position = _normalDamageButtonDefaultPosition + new Vector3(0, 20, 0);
-                break;
+                return;
             case TowerManagerScript.TowerType.Siege:
                 _siegeDamageButton.transform.position = _siegeDamageButtonDefaultPosition + new Vector3(0, 20, 0);
-                break;
+                return;
             case TowerManagerScript.TowerType.Magic:
                 _magicDamageButton.transform.position = _magicDamageButtonDefaultPosition + new Vector3(0, 20, 0);
-                break;
+                return;
         }
         
         Debug.Log("Tower type not found");

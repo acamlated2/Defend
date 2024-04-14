@@ -16,8 +16,11 @@ public class AIHelperScript : MonoBehaviour
     private GameObject _archerTowerButton;
     private GameObject _siegeTowerButton;
     private GameObject _magicTowerButton;
+    private GameObject _stoolTowerButton;
 
     private GameObject _upgradeUI;
+
+    private GameObject _lastSuggestedBlock;
 
     private void Awake()
     {
@@ -28,6 +31,7 @@ public class AIHelperScript : MonoBehaviour
         _archerTowerButton = GameObject.FindGameObjectWithTag("Archer Tower Button");
         _siegeTowerButton = GameObject.FindGameObjectWithTag("Siege Tower Button");
         _magicTowerButton = GameObject.FindGameObjectWithTag("Magic Tower Button");
+        _stoolTowerButton = GameObject.FindGameObjectWithTag("Stool Tower Button");
 
         _upgradeUI = GameObject.FindGameObjectWithTag("Upgrade UI");
     }
@@ -62,26 +66,39 @@ public class AIHelperScript : MonoBehaviour
     private void GetSuggestion()
     {
         TowerManagerScript.TowerType suggestedType = GetSuggestedTowerType();
+        if (SuggestStool(suggestedType))
+        {
+            Debug.Log("New Stool Suggested");
+            _upgradeUI.GetComponent<UpgradeUIScript>().CloseUpgrade();
+            GetComponent<PlayerInputController>().HideUpgradeIndicatorCube();
+            _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            _stoolTowerButton.GetComponent<TowerButtonScript>().Suggest();
+            
+            GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Stool);
+            return;
+        }
+        
         if (SuggestUpgrade(suggestedType, out GameObject suggestedTower))
         {
             Debug.Log("upgrade suggested");
             _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             
             _upgradeUI.GetComponent<UpgradeUIScript>().OpenUpgrade(suggestedTower);
             _upgradeUI.GetComponent<UpgradeUIScript>().UnSuggestUpgrades();
             _upgradeUI.GetComponent<UpgradeUIScript>().SuggestByType(suggestedType);
             
             GetComponent<PlayerInputController>().IndicateObject(suggestedTower);
+            return;
         }
-        else
-        {
-            Debug.Log("new tower suggested");
-            _upgradeUI.GetComponent<UpgradeUIScript>().CloseUpgrade();
-            GetSuggestedTowerPlacement(GetComponent<TowerManagerScript>().GetPrefabByType(suggestedType));
-            GetComponent<PlayerInputController>().HideUpgradeIndicatorCube();
-        }
+        Debug.Log("new tower suggested");
+        _upgradeUI.GetComponent<UpgradeUIScript>().CloseUpgrade();
+        GetSuggestedTowerPlacement(GetComponent<TowerManagerScript>().GetPrefabByType(suggestedType));
+        GetComponent<PlayerInputController>().HideUpgradeIndicatorCube();
     }
 
     private void GetSuggestedTowerPlacement(GameObject tower)
@@ -96,26 +113,7 @@ public class AIHelperScript : MonoBehaviour
                 continue;
             }
 
-            float towerRange = tower.GetComponent<BaseTowerScript>()
-                                    .CalculateRange(groundBlock.GetComponent<GroundBlockScript>().height);
-            
-            Vector3 towerLocation = groundBlock.transform.position + new Vector3(0, 2, 0);
-
-            float coverageSum = 0;
-            
-            foreach (var roadblock in roadBlocks)
-            {
-                float distance = Vector3.Distance(towerLocation, roadblock.transform.position);
-                
-                if (distance <= towerRange)
-                {
-                    float roadBlockCoverageValue = roadblock.GetComponent<RoadBlockScript>().coverageValue;
-
-                    coverageSum -= (roadBlockCoverageValue / towerRange) *
-                                   _towerSpreadSlider.GetComponent<SliderScript>().sliderValue;
-                    coverageSum += towerRange - distance / towerRange;
-                }
-            }
+            float coverageSum = GetTowerCoverageSum(groundBlock, tower, 0);
             
             if (coverageSum >= highestCoverageSum)
             {
@@ -123,8 +121,13 @@ public class AIHelperScript : MonoBehaviour
                 blockWithHighestSum = groundBlock;
             }
         }
-        
-        blockWithHighestSum.GetComponent<Renderer>().material.color = Color.blue;
+
+        if (_lastSuggestedBlock)
+        {
+            _lastSuggestedBlock.GetComponent<GroundBlockScript>().UnSuggest();
+        }
+        blockWithHighestSum.GetComponent<GroundBlockScript>().Suggest();
+        _lastSuggestedBlock = blockWithHighestSum;
     }
 
     public void AssignCoverageValues(GameObject tower)
@@ -174,10 +177,9 @@ public class AIHelperScript : MonoBehaviour
                                   _typeSensitivitySlider.GetComponent<SliderScript>().sliderValue;
         float armorDangerLevel = (armorTotal - magicDamageTotal) *
                                  _typeSensitivitySlider.GetComponent<SliderScript>().sliderValue;
-        
-        Debug.Log("health " + healthDangerLevel);
-        Debug.Log("shield " + shieldDangerLevel);
-        Debug.Log("armor " + armorDangerLevel);
+
+        Debug.Log("health " + healthDangerLevel + " shield " + shieldDangerLevel 
+                  + " armor " + armorDangerLevel);
 
         float highestDangerValue = healthDangerLevel;
         TowerManagerScript.TowerType suggestedTowerType = TowerManagerScript.TowerType.Archer;
@@ -199,18 +201,24 @@ public class AIHelperScript : MonoBehaviour
                 _archerTowerButton.GetComponent<TowerButtonScript>().Suggest();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Archer);
                 break;
             
             case TowerManagerScript.TowerType.Siege:
                 _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().Suggest();
                 _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Siege);
                 break;
             
             case TowerManagerScript.TowerType.Magic:
                 _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 _magicTowerButton.GetComponent<TowerButtonScript>().Suggest();
+                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Magic);
                 break;
         }
 
@@ -260,5 +268,80 @@ public class AIHelperScript : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private bool SuggestStool(TowerManagerScript.TowerType suggestedType)
+    {
+        EconomyManager economyManager = GetComponent<EconomyManager>();
+        
+        float priceSum = economyManager.GetTowerPriceByType(suggestedType) +
+                         economyManager.GetTowerPriceByType(TowerManagerScript.TowerType.Stool);
+
+        GameObject highestGroundBlock = new GameObject();
+        int highestHeight = int.MinValue;
+
+        foreach (var groundBlock in groundBlocks)
+        {
+            if (groundBlock.GetComponent<GroundBlockScript>().hasTower)
+            {
+                continue;
+            }
+            
+            int height = groundBlock.GetComponent<GroundBlockScript>().height;
+
+            if (height > highestHeight)
+            {
+                highestHeight = height;
+                highestGroundBlock = groundBlock;
+            }
+        }
+
+        GameObject tempTower = GetComponent<TowerManagerScript>().GetPrefabByType(suggestedType);
+        float towerNormalCoverage = GetTowerCoverageSum(highestGroundBlock,  tempTower, 0);
+        float towerWithStoolCoverage = GetTowerCoverageSum(highestGroundBlock, tempTower, 1);
+
+        float ratio = towerWithStoolCoverage / towerNormalCoverage;
+
+        float projectedPrice = economyManager.GetTowerPriceByType(suggestedType) * ratio;
+        
+        if (_lastSuggestedBlock)
+        {
+            _lastSuggestedBlock.GetComponent<GroundBlockScript>().UnSuggest();
+        }
+        highestGroundBlock.GetComponent<GroundBlockScript>().Suggest();
+        _lastSuggestedBlock = highestGroundBlock;
+        
+        if (projectedPrice > priceSum)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private float GetTowerCoverageSum(GameObject groundBlock, GameObject tower, int heightIncrease)
+    {
+        float towerRange = tower.GetComponent<BaseTowerScript>()
+                                .CalculateRange(groundBlock.GetComponent<GroundBlockScript>().height +
+                                                heightIncrease);
+            
+        Vector3 towerLocation = groundBlock.transform.position + new Vector3(0, 2, 0);
+
+        float coverageSum = 0;
+        
+        foreach (var roadblock in roadBlocks)
+        {
+            float distance = Vector3.Distance(towerLocation, roadblock.transform.position);
+                
+            if (distance <= towerRange)
+            {
+                float roadBlockCoverageValue = roadblock.GetComponent<RoadBlockScript>().coverageValue;
+
+                coverageSum -= (roadBlockCoverageValue / towerRange) *
+                               _towerSpreadSlider.GetComponent<SliderScript>().sliderValue;
+                coverageSum += towerRange - distance / towerRange;
+            }
+        }
+
+        return coverageSum;
     }
 }

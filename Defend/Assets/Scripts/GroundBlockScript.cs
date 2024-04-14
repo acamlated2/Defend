@@ -11,6 +11,11 @@ public class GroundBlockScript : BlockScript
 
     [SerializeField] private GameObject stoolBlockPrefab;
 
+    public bool suggested;
+
+    [SerializeField] private Material normalMaterial;
+    [SerializeField] private Material suggestedMaterial;
+
     protected override void Awake()
     {
         base.Awake();
@@ -70,5 +75,17 @@ public class GroundBlockScript : BlockScript
         height += 1;
         
         CreateStool(new Vector3(position.x, position.y - 1.125f - 0.25f * (height - 1), position.z));
+    }
+
+    public void Suggest()
+    {
+        suggested = true;
+        GetComponent<Renderer>().material = suggestedMaterial;
+    }
+
+    public void UnSuggest()
+    {
+        suggested = false;
+        GetComponent<Renderer>().material = normalMaterial;
     }
 }

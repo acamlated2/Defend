@@ -3,7 +3,10 @@ guid: d484cbe8d4a7147418d6f597a2defe00
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - stoolBlockPrefab: {fileID: 7974488915539661986, guid: 31cb140d1520bfc4d994b6bb4788ab73, type: 3}
+  - normalMaterial: {fileID: 2100000, guid: 354c92f6513469c4eb37a82bedfdbcab, type: 2}
+  - suggestedMaterial: {fileID: 2100000, guid: b71dc7482799e75478ee8040b359ed01, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
