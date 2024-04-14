@@ -9,9 +9,10 @@ public class AIHelperScript : MonoBehaviour
     [SerializeField] private List<GameObject> groundBlocks = new List<GameObject>();
     public List<GameObject> roadBlocks = new List<GameObject>();
 
-    private GameObject _towerSpreadSlider;
-    private GameObject _typeSensitivitySlider;
-    private GameObject _upgradeSensitivitySlider;
+    private SliderScript _towerSpreadSlider;
+    private SliderScript _typeSensitivitySlider;
+    private SliderScript _upgradeSensitivitySlider;
+    private SliderScript _stoolSensitivitySlider;
 
     private GameObject _archerTowerButton;
     private GameObject _siegeTowerButton;
@@ -24,9 +25,14 @@ public class AIHelperScript : MonoBehaviour
 
     private void Awake()
     {
-        _towerSpreadSlider = GameObject.FindGameObjectWithTag("Tower Spread Slider");
-        _typeSensitivitySlider = GameObject.FindGameObjectWithTag("Type Sensitivity Slider");
-        _upgradeSensitivitySlider = GameObject.FindGameObjectWithTag("Upgrade Sensitivity Slider");
+        _towerSpreadSlider =
+            GameObject.FindGameObjectWithTag("Tower Spread Slider").GetComponent<SliderScript>();
+        _typeSensitivitySlider = GameObject.FindGameObjectWithTag("Type Sensitivity Slider")
+                                           .GetComponent<SliderScript>();
+        _upgradeSensitivitySlider = GameObject.FindGameObjectWithTag("Upgrade Sensitivity Slider")
+                                              .GetComponent<SliderScript>();
+        _stoolSensitivitySlider = GameObject.FindGameObjectWithTag("Stool Sensitivity Slider")
+                                            .GetComponent<SliderScript>();
 
         _archerTowerButton = GameObject.FindGameObjectWithTag("Archer Tower Button");
         _siegeTowerButton = GameObject.FindGameObjectWithTag("Siege Tower Button");
@@ -87,6 +93,7 @@ public class AIHelperScript : MonoBehaviour
             _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            _lastSuggestedBlock.GetComponent<GroundBlockScript>().UnSuggest();
             
             _upgradeUI.GetComponent<UpgradeUIScript>().OpenUpgrade(suggestedTower);
             _upgradeUI.GetComponent<UpgradeUIScript>().UnSuggestUpgrades();
@@ -173,10 +180,8 @@ public class AIHelperScript : MonoBehaviour
         }
 
         float healthDangerLevel = healthTotal / 3 - normalDamageTotal;
-        float shieldDangerLevel = (shieldTotal - siegeDamageTotal) *
-                                  _typeSensitivitySlider.GetComponent<SliderScript>().sliderValue;
-        float armorDangerLevel = (armorTotal - magicDamageTotal) *
-                                 _typeSensitivitySlider.GetComponent<SliderScript>().sliderValue;
+        float shieldDangerLevel = (shieldTotal - siegeDamageTotal) * _typeSensitivitySlider.sliderValue;
+        float armorDangerLevel = (armorTotal - magicDamageTotal) * _typeSensitivitySlider.sliderValue;
 
         Debug.Log("health " + healthDangerLevel + " shield " + shieldDangerLevel 
                   + " armor " + armorDangerLevel);
@@ -263,7 +268,7 @@ public class AIHelperScript : MonoBehaviour
         
         suggestedTower = bestSuggestedTower;
         
-        if (bestProjectedPrice < newTowerPrice * _upgradeSensitivitySlider.GetComponent<SliderScript>().sliderValue)
+        if (bestProjectedPrice < newTowerPrice * _upgradeSensitivitySlider.sliderValue)
         {
             return true;
         }
@@ -311,7 +316,7 @@ public class AIHelperScript : MonoBehaviour
         highestGroundBlock.GetComponent<GroundBlockScript>().Suggest();
         _lastSuggestedBlock = highestGroundBlock;
         
-        if (projectedPrice > priceSum)
+        if (projectedPrice * _stoolSensitivitySlider.sliderValue > priceSum)
         {
             return true;
         }
@@ -336,8 +341,7 @@ public class AIHelperScript : MonoBehaviour
             {
                 float roadBlockCoverageValue = roadblock.GetComponent<RoadBlockScript>().coverageValue;
 
-                coverageSum -= (roadBlockCoverageValue / towerRange) *
-                               _towerSpreadSlider.GetComponent<SliderScript>().sliderValue;
+                coverageSum -= (roadBlockCoverageValue / towerRange) * _towerSpreadSlider.sliderValue;
                 coverageSum += towerRange - distance / towerRange;
             }
         }
