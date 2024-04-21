@@ -10,7 +10,7 @@ public class BlockScript : MonoBehaviour
         Ground, 
         Road, 
         Null, 
-        Stool
+        Platform
     }
 
     protected virtual void Awake()

@@ -81,7 +81,7 @@ MonoBehaviour:
   type: 0
   hasTower: 0
   height: 0
-  stoolBlockPrefab: {fileID: 7974488915539661986, guid: 31cb140d1520bfc4d994b6bb4788ab73, type: 3}
+  platformBlockPrefab: {fileID: 7974488915539661986, guid: 31cb140d1520bfc4d994b6bb4788ab73, type: 3}
   suggested: 0
   normalMaterial: {fileID: 2100000, guid: 354c92f6513469c4eb37a82bedfdbcab, type: 2}
   suggestedMaterial: {fileID: 2100000, guid: b71dc7482799e75478ee8040b359ed01, type: 2}

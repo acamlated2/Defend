@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EconomyManager : MonoBehaviour
 {
@@ -10,11 +11,11 @@ public class EconomyManager : MonoBehaviour
 
     [SerializeField] private float archerTowerPrice = 10;
     [SerializeField] private float siegeTowerPrice = 10;
-    [SerializeField] private float magicTowerPrice = 10;
-    [SerializeField] private float stoolTowerPrice = 50;
+    [SerializeField] private float magicTowerPrice = 10; 
+    [SerializeField] private float platformTowerPrice = 50;
 
     [SerializeField] private float towerPriceIncrement = 10;
-    [SerializeField] private float stoolPriceIncrement = 20;
+    [SerializeField] private float platformPriceIncrement = 20;
 
     private void Awake()
     {
@@ -65,11 +66,11 @@ public class EconomyManager : MonoBehaviour
                 towerSelectorScript.GetButtonByType(TowerManagerScript.TowerType.Magic)
                                    .GetComponent<TowerButtonScript>().ChangePrice(magicTowerPrice);
                 break;
-            case TowerManagerScript.TowerType.Stool:
-                ReduceMoney(stoolTowerPrice);
-                stoolTowerPrice += stoolPriceIncrement;
-                towerSelectorScript.GetButtonByType(TowerManagerScript.TowerType.Stool)
-                                   .GetComponent<TowerButtonScript>().ChangePrice(stoolTowerPrice);
+            case TowerManagerScript.TowerType.Platform:
+                ReduceMoney(platformTowerPrice);
+                platformTowerPrice += platformPriceIncrement;
+                towerSelectorScript.GetButtonByType(TowerManagerScript.TowerType.Platform)
+                                   .GetComponent<TowerButtonScript>().ChangePrice(platformTowerPrice);
                 break;
         }
     }
@@ -96,8 +97,8 @@ public class EconomyManager : MonoBehaviour
                     return true;
                 }
                 break;
-            case TowerManagerScript.TowerType.Stool:
-                if (playerMoney >= stoolTowerPrice)
+            case TowerManagerScript.TowerType.Platform:
+                if (playerMoney >= platformTowerPrice)
                 {
                     return true;
                 }
@@ -129,8 +130,8 @@ public class EconomyManager : MonoBehaviour
                 return siegeTowerPrice;
             case TowerManagerScript.TowerType.Magic:
                 return magicTowerPrice;
-            case TowerManagerScript.TowerType.Stool:
-                return stoolTowerPrice;
+            case TowerManagerScript.TowerType.Platform:
+                return platformTowerPrice;
         }
         
         Debug.Log("Tower type not found");

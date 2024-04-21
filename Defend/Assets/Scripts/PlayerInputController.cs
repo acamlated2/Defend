@@ -98,9 +98,9 @@ public class PlayerInputController : MonoBehaviour
 
                 TowerSelectorScript towerSelectorScript = GetComponent<TowerSelectorScript>();
 
-                if (towerSelectorScript.GetSelectedType() == TowerManagerScript.TowerType.Stool)
+                if (towerSelectorScript.GetSelectedType() == TowerManagerScript.TowerType.Platform)
                 {
-                    if (!GetComponent<TowerManagerScript>().CreateNewStool(_hit.transform.gameObject))
+                    if (!GetComponent<TowerManagerScript>().CreateNewPlatform(_hit.transform.gameObject))
                     {
                         towerSelectorScript.GetSelectedButton().GetComponent<TowerButtonScript>().Shake();
                     }

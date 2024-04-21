@@ -12,12 +12,12 @@ public class AIHelperScript : MonoBehaviour
     private SliderScript _towerSpreadSlider;
     private SliderScript _typeSensitivitySlider;
     private SliderScript _upgradeSensitivitySlider;
-    private SliderScript _stoolSensitivitySlider;
+    private SliderScript _platformSensitivitySlider;
 
     private GameObject _archerTowerButton;
     private GameObject _siegeTowerButton;
     private GameObject _magicTowerButton;
-    private GameObject _stoolTowerButton;
+    private GameObject _platformTowerButton;
 
     private GameObject _upgradeUI;
 
@@ -31,13 +31,13 @@ public class AIHelperScript : MonoBehaviour
                                            .GetComponent<SliderScript>();
         _upgradeSensitivitySlider = GameObject.FindGameObjectWithTag("Upgrade Sensitivity Slider")
                                               .GetComponent<SliderScript>();
-        _stoolSensitivitySlider = GameObject.FindGameObjectWithTag("Stool Sensitivity Slider")
+        _platformSensitivitySlider = GameObject.FindGameObjectWithTag("Platform Sensitivity Slider")
                                             .GetComponent<SliderScript>();
 
         _archerTowerButton = GameObject.FindGameObjectWithTag("Archer Tower Button");
         _siegeTowerButton = GameObject.FindGameObjectWithTag("Siege Tower Button");
         _magicTowerButton = GameObject.FindGameObjectWithTag("Magic Tower Button");
-        _stoolTowerButton = GameObject.FindGameObjectWithTag("Stool Tower Button");
+        _platformTowerButton = GameObject.FindGameObjectWithTag("Platform Tower Button");
 
         _upgradeUI = GameObject.FindGameObjectWithTag("Upgrade UI");
     }
@@ -72,17 +72,17 @@ public class AIHelperScript : MonoBehaviour
     private void GetSuggestion()
     {
         TowerManagerScript.TowerType suggestedType = GetSuggestedTowerType();
-        if (SuggestStool(suggestedType))
+        if (SuggestPlatform(suggestedType))
         {
-            Debug.Log("New Stool Suggested");
+            Debug.Log("New Platform Suggested");
             _upgradeUI.GetComponent<UpgradeUIScript>().CloseUpgrade();
             GetComponent<PlayerInputController>().HideUpgradeIndicatorCube();
             _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-            _stoolTowerButton.GetComponent<TowerButtonScript>().Suggest();
+            _platformTowerButton.GetComponent<TowerButtonScript>().Suggest();
             
-            GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Stool);
+            GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Platform);
             return;
         }
         
@@ -92,7 +92,7 @@ public class AIHelperScript : MonoBehaviour
             _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-            _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+            _platformTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
             _lastSuggestedBlock.GetComponent<GroundBlockScript>().UnSuggest();
             
             _upgradeUI.GetComponent<UpgradeUIScript>().OpenUpgrade(suggestedTower);
@@ -206,7 +206,7 @@ public class AIHelperScript : MonoBehaviour
                 _archerTowerButton.GetComponent<TowerButtonScript>().Suggest();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _platformTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Archer);
                 break;
             
@@ -214,7 +214,7 @@ public class AIHelperScript : MonoBehaviour
                 _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().Suggest();
                 _magicTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
-                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _platformTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Siege);
                 break;
             
@@ -222,7 +222,7 @@ public class AIHelperScript : MonoBehaviour
                 _archerTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 _siegeTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 _magicTowerButton.GetComponent<TowerButtonScript>().Suggest();
-                _stoolTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
+                _platformTowerButton.GetComponent<TowerButtonScript>().UnSuggest();
                 GetComponent<TowerSelectorScript>().ChangeSelection(TowerManagerScript.TowerType.Magic);
                 break;
         }
@@ -275,12 +275,12 @@ public class AIHelperScript : MonoBehaviour
         return false;
     }
 
-    private bool SuggestStool(TowerManagerScript.TowerType suggestedType)
+    private bool SuggestPlatform(TowerManagerScript.TowerType suggestedType)
     {
         EconomyManager economyManager = GetComponent<EconomyManager>();
         
         float priceSum = economyManager.GetTowerPriceByType(suggestedType) +
-                         economyManager.GetTowerPriceByType(TowerManagerScript.TowerType.Stool);
+                         economyManager.GetTowerPriceByType(TowerManagerScript.TowerType.Platform);
 
         GameObject highestGroundBlock = new GameObject();
         int highestHeight = int.MinValue;
@@ -303,9 +303,9 @@ public class AIHelperScript : MonoBehaviour
 
         GameObject tempTower = GetComponent<TowerManagerScript>().GetPrefabByType(suggestedType);
         float towerNormalCoverage = GetTowerCoverageSum(highestGroundBlock,  tempTower, 0);
-        float towerWithStoolCoverage = GetTowerCoverageSum(highestGroundBlock, tempTower, 1);
+        float towerWithPlatformCoverage = GetTowerCoverageSum(highestGroundBlock, tempTower, 1);
 
-        float ratio = towerWithStoolCoverage / towerNormalCoverage;
+        float ratio = towerWithPlatformCoverage / towerNormalCoverage;
 
         float projectedPrice = economyManager.GetTowerPriceByType(suggestedType) * ratio;
         
@@ -316,7 +316,7 @@ public class AIHelperScript : MonoBehaviour
         highestGroundBlock.GetComponent<GroundBlockScript>().Suggest();
         _lastSuggestedBlock = highestGroundBlock;
         
-        if (projectedPrice * _stoolSensitivitySlider.sliderValue > priceSum)
+        if (projectedPrice * _platformSensitivitySlider.sliderValue > priceSum)
         {
             return true;
         }

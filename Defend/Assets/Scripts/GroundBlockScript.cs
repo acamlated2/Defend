@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class GroundBlockScript : BlockScript
@@ -9,7 +10,7 @@ public class GroundBlockScript : BlockScript
     public bool hasTower;
     public int height;
 
-    [SerializeField] private GameObject stoolBlockPrefab;
+    [SerializeField] private GameObject platformBlockPrefab;
 
     public bool suggested;
 
@@ -39,34 +40,34 @@ public class GroundBlockScript : BlockScript
             
             case 5: case 6: case 7:
                 transform.position = new Vector3(xPos, yPos + 0.25f, zPos);
-                CreateStool(new Vector3(xPos, transform.position.y - 1.125f, zPos));
+                CreatePlatform(new Vector3(xPos, transform.position.y - 1.125f, zPos));
                 height = 1;
                 break;
             
             case 8: case 9:
                 transform.position = new Vector3(xPos, yPos + 0.5f, zPos);
-                CreateStool(new Vector3(xPos, transform.position.y - 1.125f, zPos));
-                CreateStool(new Vector3(xPos, transform.position.y - 1.375f, zPos));
+                CreatePlatform(new Vector3(xPos, transform.position.y - 1.125f, zPos));
+                CreatePlatform(new Vector3(xPos, transform.position.y - 1.375f, zPos));
                 height = 2;
                 break;
             
             case 10:
                 transform.position = new Vector3(xPos, yPos + 0.75f, zPos);
-                CreateStool(new Vector3(xPos, transform.position.y - 1.125f, zPos));
-                CreateStool(new Vector3(xPos, transform.position.y - 1.375f, zPos));
-                CreateStool(new Vector3(xPos, transform.position.y - 1.625f, zPos));
+                CreatePlatform(new Vector3(xPos, transform.position.y - 1.125f, zPos));
+                CreatePlatform(new Vector3(xPos, transform.position.y - 1.375f, zPos));
+                CreatePlatform(new Vector3(xPos, transform.position.y - 1.625f, zPos));
                 height = 3;
                 break;
         }
     }
 
-    private void CreateStool(Vector3 pos)
+    private void CreatePlatform(Vector3 pos)
     {
-        GameObject newStool = Instantiate(stoolBlockPrefab, pos, Quaternion.identity);
-        newStool.transform.SetParent(transform);
+        GameObject newPlatform = Instantiate(platformBlockPrefab, pos, Quaternion.identity);
+        newPlatform.transform.SetParent(transform);
     }
 
-    public void AddStool()
+    public void AddPlatform()
     {
         var position = transform.position;
         position = new Vector3(position.x, position.y + 0.25f, position.z);
@@ -74,7 +75,7 @@ public class GroundBlockScript : BlockScript
 
         height += 1;
         
-        CreateStool(new Vector3(position.x, position.y - 1.125f - 0.25f * (height - 1), position.z));
+        CreatePlatform(new Vector3(position.x, position.y - 1.125f - 0.25f * (height - 1), position.z));
     }
 
     public void Suggest()
