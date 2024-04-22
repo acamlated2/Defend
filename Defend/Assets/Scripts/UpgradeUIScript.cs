@@ -163,13 +163,13 @@ public class UpgradeUIScript : MonoBehaviour
         switch (type)
         {
             case TowerManagerScript.TowerType.Archer:
-                _normalDamageButton.transform.position = _normalDamageButtonDefaultPosition + new Vector3(0, 20, 0);
+                _normalDamageButton.transform.position = _normalDamageButtonDefaultPosition + new Vector3(-50, 0, 0);
                 return;
             case TowerManagerScript.TowerType.Siege:
-                _siegeDamageButton.transform.position = _siegeDamageButtonDefaultPosition + new Vector3(0, 20, 0);
+                _siegeDamageButton.transform.position = _siegeDamageButtonDefaultPosition + new Vector3(-50, 0, 0);
                 return;
             case TowerManagerScript.TowerType.Magic:
-                _magicDamageButton.transform.position = _magicDamageButtonDefaultPosition + new Vector3(0, 20, 0);
+                _magicDamageButton.transform.position = _magicDamageButtonDefaultPosition + new Vector3(-50, 0, 0);
                 return;
         }
         
